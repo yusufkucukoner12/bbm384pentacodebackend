@@ -11,10 +11,5 @@ public class RestaurantDTO {
     public Long pk;
     public Integer version;
 
-    public RestaurantDTO(String name, Long pk, Integer version) {
-        this.name = name;
-        this.pk = pk;
-        this.version = version; 
-    }
 
 }

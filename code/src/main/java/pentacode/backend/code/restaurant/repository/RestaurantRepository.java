@@ -7,5 +7,4 @@ import pentacode.backend.code.restaurant.entity.Restaurant;
 @Primary
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
     Restaurant findByName(String name);
-
 }
