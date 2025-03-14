@@ -21,13 +21,16 @@ import pentacode.backend.code.restaurant.service.RestaurantService;
 
 @RestController
 @RequestMapping("/api/restaurant")
-@Data
-@SuperBuilder
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class RestaurantController extends BaseController<Restaurant ,RestaurantMapper> {
-    private RestaurantService restaurantService;
-    private RestaurantMapper restaurantMapper;
+    private final RestaurantService restaurantService;
+    private final RestaurantMapper restaurantMapper;
+
+    // constructor
+    public RestaurantController(RestaurantService restaurantService, RestaurantMapper restaurantMapper){
+        super(restaurantService, restaurantMapper);
+        this.restaurantService = restaurantService;
+        this.restaurantMapper = restaurantMapper;
+    }
 
     
     @GetMapping("{pk}")
@@ -41,3 +44,4 @@ public class RestaurantController extends BaseController<Restaurant ,RestaurantM
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
     }   
 }
+    
