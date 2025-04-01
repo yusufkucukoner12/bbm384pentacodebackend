@@ -34,4 +34,8 @@ public class Menu extends BaseAudityModel{
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "food_id"))
     private List<Food> foods;
+
+    @ManyToMany(mappedBy = "menus")
+    private List<Order> orders;
+
 }
