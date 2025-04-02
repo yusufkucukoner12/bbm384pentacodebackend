@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import pentacode.backend.code.common.controller.BaseController;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
@@ -32,9 +28,8 @@ public class RestaurantController extends BaseController<Restaurant ,RestaurantM
         this.restaurantMapper = restaurantMapper;
     }
 
-    
     @GetMapping("{pk}")
-    public ResponseEntity<Object> getRestaurant(@PathVariable Long pk){
+    public ResponseEntity<Object> getRestByPk(@PathVariable Long pk){
         return super.getByPkOr404(pk);
     }
 

@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.BaseAudityModel;
 
@@ -18,11 +19,12 @@ import pentacode.backend.code.common.entity.BaseAudityModel;
 @Setter
 @Table(name = "orders")
 @AllArgsConstructor
+@NoArgsConstructor
 public class Order extends BaseAudityModel{
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable=false, insertable=false, updatable=false)
+    @JoinColumn(name = "restaurant_id", nullable=false)
     private Restaurant restaurant;
 
     @ManyToMany

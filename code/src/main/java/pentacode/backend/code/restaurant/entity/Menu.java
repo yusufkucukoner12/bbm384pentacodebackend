@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.BaseAudityModel;
@@ -15,6 +16,7 @@ import pentacode.backend.code.common.entity.BaseAudityModel;
 @Entity
 @Getter
 @Setter
+@Data
 @AllArgsConstructor
 public class Menu extends BaseAudityModel{
     private String name;
