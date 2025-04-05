@@ -8,29 +8,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import pentacode.backend.code.common.controller.BaseController;
+import lombok.AllArgsConstructor;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
-import pentacode.backend.code.restaurant.entity.Restaurant;
-import pentacode.backend.code.restaurant.mapper.RestaurantMapper;
 import pentacode.backend.code.restaurant.service.RestaurantService;
 
 @RestController
 @RequestMapping("/api/restaurant")
-public class RestaurantController extends BaseController<Restaurant ,RestaurantMapper> {
+@AllArgsConstructor
+public class RestaurantController{
     private final RestaurantService restaurantService;
-    private final RestaurantMapper restaurantMapper;
-
-    // constructor
-    public RestaurantController(RestaurantService restaurantService, RestaurantMapper restaurantMapper){
-        super(restaurantService, restaurantMapper);
-        this.restaurantService = restaurantService;
-        this.restaurantMapper = restaurantMapper;
-    }
 
     @GetMapping("{pk}")
     public ResponseEntity<Object> getRestByPk(@PathVariable Long pk){
-        return super.getByPkOr404(pk);
+        return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, restaurantService.getByPk(pk));
     }
 
     @GetMapping("name/{name}")

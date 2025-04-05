@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class OrderDTO {
-    public Long id;
+public class MenuDTO {
     public String name;
-    public RestaurantDTO restaurant;
-    public List<MenuDTO> menus;
+    public String description;
+    public double price;
+    private List<FoodDTO> foods;
 }

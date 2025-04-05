@@ -21,13 +21,16 @@ public class Food extends BaseAudityModel{
     private String description;
     private double price;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable=true)
     private String imageUrl;
     private String category;
 
-    @Column(name = "is_available")
+    @Column(name = "is_available", nullable=true)
     private boolean isAvailable;
     
     @ManyToMany(mappedBy = "foods")
     private List<Menu> menus;
+
+    @Column(name = "is_drink")
+    private boolean isDrink;
 }

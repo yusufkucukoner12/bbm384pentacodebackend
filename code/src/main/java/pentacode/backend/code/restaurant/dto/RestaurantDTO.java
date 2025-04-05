@@ -10,6 +10,4 @@ public class RestaurantDTO {
     public String name;
     public Long pk;
     public Integer version;
-
-
 }

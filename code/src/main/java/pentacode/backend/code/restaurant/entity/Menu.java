@@ -2,6 +2,8 @@ package pentacode.backend.code.restaurant.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -10,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.BaseAudityModel;
 
@@ -18,6 +21,7 @@ import pentacode.backend.code.common.entity.BaseAudityModel;
 @Setter
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Menu extends BaseAudityModel{
     private String name;
     private String description;
@@ -29,7 +33,6 @@ public class Menu extends BaseAudityModel{
 
     @Column(name = "is_available")
     private boolean isAvailable;
-
 
     @ManyToMany
     @JoinTable(name = "menu_food",
