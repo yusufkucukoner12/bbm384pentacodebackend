@@ -9,7 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.BaseAudityModel;
+import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
 @Entity
 @Getter

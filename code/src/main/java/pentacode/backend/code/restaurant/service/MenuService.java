@@ -2,7 +2,7 @@ package pentacode.backend.code.restaurant.service;
 
 import org.springframework.stereotype.Service;
 
-import pentacode.backend.code.common.service.BaseService;
+import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.restaurant.dto.MenuDTO;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.mapper.MenuMapper;

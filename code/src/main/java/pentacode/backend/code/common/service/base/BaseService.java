@@ -1,7 +1,7 @@
-package pentacode.backend.code.common.service;
+package pentacode.backend.code.common.service.base;
 
-import pentacode.backend.code.common.entity.BaseAudityModel;
-import pentacode.backend.code.common.repository.BaseRepository;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
+import pentacode.backend.code.common.repository.base.BaseRepository;
 
 public abstract class BaseService<Entity extends BaseAudityModel>{
 	protected BaseRepository<Entity> repository;

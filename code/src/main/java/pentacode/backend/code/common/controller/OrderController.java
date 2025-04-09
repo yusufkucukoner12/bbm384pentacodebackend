@@ -1,4 +1,4 @@
-package pentacode.backend.code.restaurant.controller;
+package pentacode.backend.code.common.controller;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import pentacode.backend.code.common.dto.OrderDTO;
+import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
-import pentacode.backend.code.restaurant.dto.OrderDTO;
-import pentacode.backend.code.restaurant.service.OrderService;
 
 @RestController
 @RequestMapping("/api/order")

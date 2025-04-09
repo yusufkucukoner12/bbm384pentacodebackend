@@ -1,14 +1,14 @@
-package pentacode.backend.code.restaurant.service;
+package pentacode.backend.code.common.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import pentacode.backend.code.common.service.BaseService;
-import pentacode.backend.code.restaurant.dto.OrderDTO;
-import pentacode.backend.code.restaurant.entity.Order;
-import pentacode.backend.code.restaurant.mapper.OrderMapper;
-import pentacode.backend.code.restaurant.repository.OrderRepository;
+import pentacode.backend.code.common.dto.OrderDTO;
+import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.mapper.OrderMapper;
+import pentacode.backend.code.common.repository.OrderRepository;
+import pentacode.backend.code.common.service.base.BaseService;
 
 @Service
 public class OrderService extends BaseService<Order>{
@@ -29,4 +29,5 @@ public class OrderService extends BaseService<Order>{
         return orderMapper.mapToDTO(super.findByPkOr404(pk));
     }
     
+
 }

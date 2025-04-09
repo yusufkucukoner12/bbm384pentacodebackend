@@ -1,4 +1,4 @@
-package pentacode.backend.code.common.entity;
+package pentacode.backend.code.common.entity.base;
 
 import java.util.Date;
 

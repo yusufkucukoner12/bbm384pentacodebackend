@@ -1,4 +1,4 @@
-package pentacode.backend.code.common.mapper;
+package pentacode.backend.code.common.mapper.base;
 
 import java.util.List;
 

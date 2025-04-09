@@ -1,4 +1,4 @@
-package pentacode.backend.code.restaurant.entity;
+package pentacode.backend.code.common.entity;
 
 import java.util.List;
 
@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.BaseAudityModel;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
+import pentacode.backend.code.restaurant.entity.Menu;
+import pentacode.backend.code.restaurant.entity.Restaurant;
 
 @Entity
 @Getter

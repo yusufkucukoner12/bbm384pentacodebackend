@@ -1,12 +1,12 @@
-package pentacode.backend.code.restaurant.mapper;
+package pentacode.backend.code.common.mapper;
 
 import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import pentacode.backend.code.common.mapper.BaseMapper;
-import pentacode.backend.code.restaurant.dto.OrderDTO;
-import pentacode.backend.code.restaurant.entity.Order;
+import pentacode.backend.code.common.dto.OrderDTO;
+import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.mapper.base.BaseMapper;
 
 @Mapper(componentModel="spring")
 public interface OrderMapper extends BaseMapper<Order, OrderDTO>{

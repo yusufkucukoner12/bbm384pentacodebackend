@@ -9,17 +9,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.BaseAudityModel;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Food extends BaseAudityModel{
+public class Category extends BaseAudityModel{
     private String name;
     private String description;
-    private double price;
 
     @Column(name = "image_url", nullable=true)
     private String imageUrl;
@@ -28,9 +27,6 @@ public class Food extends BaseAudityModel{
     @Column(name = "is_available", nullable=true)
     private boolean isAvailable;
     
-    @ManyToMany(mappedBy = "foods")
+    @ManyToMany(mappedBy = "categories")
     private List<Menu> menus;
-
-    @Column(name = "is_drink")
-    private boolean isDrink;
 }

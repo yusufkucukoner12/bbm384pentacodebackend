@@ -14,7 +14,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.BaseAudityModel;
+import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
 @Entity
 @Getter
@@ -34,13 +35,15 @@ public class Menu extends BaseAudityModel{
     @Column(name = "is_available")
     private boolean isAvailable;
 
+    @Column(name = "is_drink", nullable=true)
+    private boolean isDrink;
+
     @ManyToMany
-    @JoinTable(name = "menu_food",
+    @JoinTable(name = "menu_category",
             joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id"))
-    private List<Food> foods;
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
 
     @ManyToMany(mappedBy = "menus")
     private List<Order> orders;
-
 }
