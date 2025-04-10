@@ -31,5 +31,5 @@ public class MenuService extends BaseService<Menu> {
     
     public List<MenuDTO> getMenuByRestaurant(Long restaurantPk){
         return menuMapper.mapToListDTO(menuRepository.findByRestaurantPk(restaurantPk));
-    }
+    }
 }

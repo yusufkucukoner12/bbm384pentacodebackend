@@ -25,5 +25,5 @@ public class Restaurant extends BaseAudityModel {
     private List<Order> orders;
 
     @OneToMany(mappedBy = "restaurant")
-    private List<Menu> menus;
+    private List<Menu> menus;
 }

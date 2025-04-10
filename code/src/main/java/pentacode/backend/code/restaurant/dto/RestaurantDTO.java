@@ -14,5 +14,5 @@ public class RestaurantDTO {
     public String name;
     public Long pk;
     public Integer version;
-    private List<MenuDTO> menus;
+    private List<MenuDTO> menus;
 }

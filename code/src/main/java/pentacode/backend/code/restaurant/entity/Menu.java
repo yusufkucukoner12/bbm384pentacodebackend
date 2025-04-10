@@ -50,5 +50,5 @@ public class Menu extends BaseAudityModel{
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    private Restaurant restaurant;
 }

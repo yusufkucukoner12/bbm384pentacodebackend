@@ -30,6 +30,6 @@ public class MenuController {
     public ResponseEntity<Object> getMenuByRestaurant(@PathVariable Long restaurantPk){
         List<MenuDTO> menuDTOs = menuService.getMenuByRestaurant(restaurantPk);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, menuDTOs, menuDTOs.size());
-    }
+    }
 }
 
