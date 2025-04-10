@@ -29,5 +29,10 @@ public class RestaurantController{
         List<RestaurantDTO> restaurantDTOs = restaurantService.getRestaurantByName(name);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
     }   
-}
-    
+
+    @GetMapping("all")
+    public ResponseEntity<Object> getAllRestaurants(){
+        List<RestaurantDTO> restaurantDTOs = restaurantService.getAllRestaurants();
+        return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
+    }
+}    

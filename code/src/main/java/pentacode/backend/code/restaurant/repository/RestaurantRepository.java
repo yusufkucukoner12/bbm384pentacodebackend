@@ -6,4 +6,5 @@ import pentacode.backend.code.restaurant.entity.Restaurant;
 
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
     List<Restaurant> findByName(String name);
+    List<Restaurant> findAll();
 }

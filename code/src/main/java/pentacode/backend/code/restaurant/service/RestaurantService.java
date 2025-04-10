@@ -30,4 +30,8 @@ public class RestaurantService extends BaseService<Restaurant>{
     public List<RestaurantDTO> getRestaurantByName(String name){
         return restaurantMapper.mapToListDTO(restaurantRepository.findByName(name));
     }
+
+    public List<RestaurantDTO> getAllRestaurants(){
+        return restaurantMapper.mapToListDTO(restaurantRepository.findAll());
+    }
 }
