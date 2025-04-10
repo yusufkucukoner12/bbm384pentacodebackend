@@ -25,9 +25,20 @@ import pentacode.backend.code.restaurant.entity.Restaurant;
 public class Order extends BaseAudityModel{
     private String name;
 
+    @Column(name = "order_status", nullable = false, length = 50)
+    private String orderStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable=false)
     private Restaurant restaurant;
+
+    @ManyToOne
+    @JoinColumn(name = "delivery_id", nullable=false)
+    private Delivery delivery;
 
     @ManyToMany
     @JoinTable(name = "order_menu",

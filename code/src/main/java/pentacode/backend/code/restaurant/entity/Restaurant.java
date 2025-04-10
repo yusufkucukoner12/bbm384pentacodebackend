@@ -24,6 +24,9 @@ public class Restaurant extends BaseAudityModel {
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;
 
+    @ManyToMany(mappedBy = "restaurant") // 
+    private List<Courier> couriers;
+
     @OneToMany(mappedBy = "restaurant")
     private List<Menu> menus;
 }
