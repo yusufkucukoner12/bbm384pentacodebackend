@@ -1,6 +1,8 @@
 package pentacode.backend.code.restaurant.dto;
 
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,4 +14,5 @@ public class RestaurantDTO {
     public String name;
     public Long pk;
     public Integer version;
+    private List<MenuDTO> menus;
 }

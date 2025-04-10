@@ -1,5 +1,7 @@
 package pentacode.backend.code.restaurant.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import pentacode.backend.code.common.service.base.BaseService;
@@ -22,5 +24,12 @@ public class MenuService extends BaseService<Menu> {
     public MenuDTO getByPk(Long pk){
         return menuMapper.mapToDTO(super.findByPkOr404(pk));
     }
+
+    public MenuDTO getMenu(Long pk){
+        return menuMapper.mapToDTO(menuRepository.findByPk(pk));
+    }
     
+    public List<MenuDTO> getMenuByRestaurant(Long restaurantPk){
+        return menuMapper.mapToListDTO(menuRepository.findByRestaurantPk(restaurantPk));
+    }
 }
