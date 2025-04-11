@@ -1,6 +1,6 @@
 package pentacode.backend.code.common.entity;
 
-public enum OrderStatus {
+public enum OrderStatusEnum {
     PLACED,           // Order has been placed but not yet processed
     CONFIRMED,        // Order has been confirmed by the restaurant
     PREPARING,        // Restaurant is preparing the order

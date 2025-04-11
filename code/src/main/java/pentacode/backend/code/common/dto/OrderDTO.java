@@ -1,11 +1,12 @@
 package pentacode.backend.code.common.dto;
 
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.OrderStatus;
+import pentacode.backend.code.common.entity.OrderStatusEnum;
 import pentacode.backend.code.courier.dto.CourierDTO;
 import pentacode.backend.code.restaurant.dto.MenuDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
@@ -20,7 +21,7 @@ public class OrderDTO {
     private RestaurantDTO restaurant;
     private List<MenuDTO> menus;
     private CourierDTO courier;
-    private OrderStatus status;
+    private OrderStatusEnum status;
     private boolean courierAssignmentAccepted;
     private Integer version;
 }

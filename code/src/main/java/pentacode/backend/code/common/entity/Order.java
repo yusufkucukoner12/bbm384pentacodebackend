@@ -43,7 +43,8 @@ public class Order extends BaseAudityModel {
     private Courier courier;
     
     @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.PLACED;
+    private OrderStatusEnum status = OrderStatusEnum.PLACED;
     
     private boolean courierAssignmentAccepted = false;
+
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.entity.Order;
-import pentacode.backend.code.common.entity.OrderStatus;
+import pentacode.backend.code.common.entity.OrderStatusEnum;
 import pentacode.backend.code.common.mapper.OrderMapper;
 import pentacode.backend.code.common.repository.OrderRepository;
 import pentacode.backend.code.common.service.base.BaseService;
@@ -41,9 +41,9 @@ public class OrderService extends BaseService<Order> {
         }
         
         // Check if order status allows reassignment
-        if (order.getStatus() == OrderStatus.DELIVERED || 
-            order.getStatus() == OrderStatus.CANCELLED || 
-            order.getStatus() == OrderStatus.REJECTED) {
+        if (order.getStatus() == OrderStatusEnum.DELIVERED || 
+            order.getStatus() == OrderStatusEnum.CANCELLED || 
+            order.getStatus() == OrderStatusEnum.REJECTED) {
             return null;
         }
         
@@ -53,7 +53,7 @@ public class OrderService extends BaseService<Order> {
         }
         
         order.setCourier(courier);
-        order.setStatus(OrderStatus.ASSIGNED);
+        order.setStatus(OrderStatusEnum.ASSIGNED);
         order.setCourierAssignmentAccepted(false);
         
         // Save the updated order
@@ -74,12 +74,12 @@ public class OrderService extends BaseService<Order> {
         
         if (accepted) {
             order.setCourierAssignmentAccepted(true);
-            order.setStatus(OrderStatus.IN_TRANSIT);
+            order.setStatus(OrderStatusEnum.IN_TRANSIT);
         } else {
             // Reset the courier assignment
             order.setCourier(null);
             order.setCourierAssignmentAccepted(false);
-            order.setStatus(OrderStatus.READY_FOR_PICKUP);
+            order.setStatus(OrderStatusEnum.READY_FOR_PICKUP);
         }
         
         Order savedOrder = orderRepository.save(order);
