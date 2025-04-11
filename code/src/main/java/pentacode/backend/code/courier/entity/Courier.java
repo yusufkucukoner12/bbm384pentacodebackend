@@ -1,18 +1,16 @@
 package pentacode.backend.code.courier.entity;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+
 import pentacode.backend.code.common.entity.Delivery;
 import pentacode.backend.code.common.entity.User;
-import pentacode.backend.code.restaurant.entity.Restaurant;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.*;
 
 @Entity
 @Getter

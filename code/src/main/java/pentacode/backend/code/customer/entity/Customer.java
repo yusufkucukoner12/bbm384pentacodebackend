@@ -1,5 +1,10 @@
 package pentacode.backend.code.customer.entity;
 
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.persistence.*;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.User;

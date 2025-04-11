@@ -3,7 +3,7 @@ package pentacode.backend.code.common.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pentacode.code.backend.common.dto.UserDTO;
+import pentacode.backend.code.common.dto.UserDTO;
 @Getter
 @Setter
 @Builder

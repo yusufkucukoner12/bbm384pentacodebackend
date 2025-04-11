@@ -1,7 +1,12 @@
 package pentacode.backend.code.common.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
 @Entity 
 @Getter

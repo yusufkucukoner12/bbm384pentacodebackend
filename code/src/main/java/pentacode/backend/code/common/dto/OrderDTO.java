@@ -5,9 +5,8 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pentacode.backend.code.restaurant.dto.CustomerDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
-import pentacode.backend.code.restaurant.dto.DeliveryDTO;
+import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.restaurant.dto.MenuDTO;
 
 @Getter

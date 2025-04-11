@@ -1,10 +1,12 @@
 package pentacode.backend.code.customer.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
-import jakarta.persistence.*;
-import pentacode.backend.code.common.entity.BaseAudityModel;
 
 @Entity
 @Getter

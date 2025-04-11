@@ -1,14 +1,17 @@
 package pentacode.backend.code.common.entity;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.*;
 import java.util.List;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

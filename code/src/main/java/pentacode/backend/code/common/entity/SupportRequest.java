@@ -5,6 +5,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import pentacode.backend.code.common.entity.base.BaseAudityModel;
+
 @Getter
 @Setter
 @Entity

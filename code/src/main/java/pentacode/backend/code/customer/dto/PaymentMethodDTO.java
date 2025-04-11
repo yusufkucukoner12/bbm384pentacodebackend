@@ -1,4 +1,4 @@
-package pentacode.backend.code.common.dto;
+package pentacode.backend.code.customer.dto;
 
 import lombok.Builder;
 import lombok.Getter;

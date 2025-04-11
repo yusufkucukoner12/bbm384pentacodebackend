@@ -1,8 +1,9 @@
-package pentacode.backend.code.common.dto;
-
+package pentacode.backend.code.customer.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import pentacode.backend.code.common.dto.AddressDTO;
+import pentacode.backend.code.common.dto.SupportRequestDTO;
 
 import java.util.List;
 

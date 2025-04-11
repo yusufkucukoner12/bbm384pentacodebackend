@@ -1,6 +1,8 @@
 package pentacode.backend.code.admin.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pentacode.backend.code.common.entity.User;
 
 @Getter
@@ -9,8 +11,11 @@ import pentacode.backend.code.common.entity.User;
 @Table(name = "admin")
 @PrimaryKeyJoinColumn(name = "id")
 public class Admin extends User {
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String surname;
 }
+

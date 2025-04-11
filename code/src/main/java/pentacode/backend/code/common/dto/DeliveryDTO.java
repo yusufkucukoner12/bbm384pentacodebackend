@@ -1,4 +1,5 @@
 package pentacode.backend.code.common.dto;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.Builder;
 import lombok.Getter;
