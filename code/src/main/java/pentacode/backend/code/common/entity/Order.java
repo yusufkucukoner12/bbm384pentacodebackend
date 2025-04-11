@@ -32,6 +32,12 @@ public class Order extends BaseAudityModel{
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @Column(name = "is_cart", nullable = false)
+    private Boolean isCart;
+
+    @Column(name = "order_cost", nullable = false)
+    private Integer orderCost;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable=false)
     private Restaurant restaurant;

@@ -5,17 +5,22 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pentacode.backend.code.restaurant.dto.MenuDTO;
+import pentacode.backend.code.restaurant.dto.CustomerDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
+import pentacode.backend.code.restaurant.dto.DeliveryDTO;
+import pentacode.backend.code.restaurant.dto.MenuDTO;
 
 @Getter
 @Setter
 @Builder
 public class OrderDTO {
-    public Long id;
-    public String name;
+    private Long id;
+    private String name;
     private String orderStatus;
+    private Boolean isCart;
+    private Integer orderCost;
     private CustomerDTO customer;
-    public RestaurantDTO restaurant;
-    public List<MenuDTO> menus;
+    private RestaurantDTO restaurant;
+    private DeliveryDTO delivery;
+    private List<MenuDTO> menus;
 }
