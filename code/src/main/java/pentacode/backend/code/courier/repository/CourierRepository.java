@@ -1,0 +1,9 @@
+package pentacode.backend.code.courier.repository;
+
+import java.util.List;
+import pentacode.backend.code.common.repository.base.BaseRepository;
+import pentacode.backend.code.courier.entity.Courier;
+
+public interface CourierRepository extends BaseRepository<Courier> {
+    List<Courier> findByIsOnlineAndIsAvailable(boolean isOnline, boolean isAvailable);
+}
