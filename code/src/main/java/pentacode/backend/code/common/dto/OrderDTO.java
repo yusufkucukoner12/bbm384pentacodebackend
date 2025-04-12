@@ -17,4 +17,5 @@ public class OrderDTO {
     public RestaurantDTO restaurant;
     public List<MenuDTO> menus;
     public String status;
+    public List<OrderItemDTO> orderItems;
 }
