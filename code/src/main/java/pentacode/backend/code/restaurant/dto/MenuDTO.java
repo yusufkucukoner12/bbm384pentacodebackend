@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class MenuDTO {
+    public Long pk;
     public String name;
     public String description;
     public double price;

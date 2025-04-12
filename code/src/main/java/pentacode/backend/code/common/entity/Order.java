@@ -2,6 +2,7 @@ package pentacode.backend.code.common.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,4 +50,8 @@ public class Order extends BaseAudityModel {
     private boolean courierAssignmentAccepted = false;
 
     private double totalPrice = 0.0;
+
+
+    @OneToMany(mappedBy = "order", cascade=CascadeType.ALL)
+    private List<OrderItem> orderItems;
 }

@@ -25,4 +25,5 @@ public class OrderDTO {
     private boolean courierAssignmentAccepted;
     private Integer version;
     private double totalPrice;
+    public List<OrderItemDTO> orderItems;
 }
