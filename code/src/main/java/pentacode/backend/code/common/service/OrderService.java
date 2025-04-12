@@ -152,4 +152,42 @@ public class OrderService extends BaseService<Order> {
         Order savedOrder = orderRepository.save(order);
         return orderMapper.mapToDTO(savedOrder);
     }
+    @Transactional
+    public OrderDTO updateOrderStatus(Long orderId, String status) {
+        Order order = super.findByPkOr404(orderId);
+        
+        if (order == null) {
+            return null;
+        }
+        
+        try {
+            OrderStatusEnum newStatus = OrderStatusEnum.valueOf(status);
+            order.setStatus(newStatus);
+            
+            // Additional business logic based on the new status
+            switch (newStatus) {
+                case CANCELLED:
+                case REJECTED:
+                    // If order is cancelled or rejected, unassign any courier
+                    if (order.getCourier() != null) {
+                        order.setCourier(null);
+                        order.setCourierAssignmentAccepted(false);
+                    }
+                    break;
+                case READY_FOR_PICKUP:
+                    break;
+                default:
+                    // No additional action for other statuses
+                    break;
+            }
+            
+            Order savedOrder = orderRepository.save(order);
+            return orderMapper.mapToDTO(savedOrder);
+            
+        } catch (IllegalArgumentException e) {
+            // Invalid status value
+            return null;
+        }
+    }
+
 }
