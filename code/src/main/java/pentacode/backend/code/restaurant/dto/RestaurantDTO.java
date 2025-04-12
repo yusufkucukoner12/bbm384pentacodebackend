@@ -15,4 +15,5 @@ public class RestaurantDTO {
     public Long pk;
     public Integer version;
     private List<MenuDTO> menus;
+    private String imageUrl;
 }
