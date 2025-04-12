@@ -47,4 +47,5 @@ public class Order extends BaseAudityModel {
     
     private boolean courierAssignmentAccepted = false;
 
+    private double totalPrice = 0.0;
 }

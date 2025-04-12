@@ -30,4 +30,17 @@ public class AdminController {
                                                 HttpStatus.OK, 
                                                 updatedOrder);
     }
+    @PostMapping("/orders/{orderId}/unassign-courier")
+    public ResponseEntity<Object> unassignCourier(@PathVariable("orderId") Long orderId) {
+        OrderDTO updatedOrder = orderService.unassignCourier(orderId);
+        if (updatedOrder == null) {
+            return ResponseHandler.generatePkResponse("Failed to unassign courier", 
+                                                    HttpStatus.BAD_REQUEST, 
+                                                    null);
+        }
+        
+        return ResponseHandler.generatePkResponse("Courier unassigned successfully", 
+                                                HttpStatus.OK, 
+                                                updatedOrder);
+    }
 }

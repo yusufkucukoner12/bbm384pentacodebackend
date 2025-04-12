@@ -24,4 +24,5 @@ public class OrderDTO {
     private OrderStatusEnum status;
     private boolean courierAssignmentAccepted;
     private Integer version;
+    private double totalPrice;
 }

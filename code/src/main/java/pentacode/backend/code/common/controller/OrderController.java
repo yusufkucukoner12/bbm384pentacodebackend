@@ -31,4 +31,9 @@ public class OrderController {
         List<OrderDTO> orderDTOs = orderService.getOrderByRestaurantPk(pk);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size()); 
     }
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllOrders() {
+        List<OrderDTO> orderDTOs = orderService.getAllOrders();
+        return ResponseHandler.generateListResponse("All orders fetched successfully", HttpStatus.OK, orderDTOs, orderDTOs.size());
+    }
 }

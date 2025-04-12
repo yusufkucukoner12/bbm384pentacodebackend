@@ -31,7 +31,9 @@ public class OrderService extends BaseService<Order> {
     public OrderDTO getByPk(Long pk) {
         return orderMapper.mapToDTO(super.findByPkOr404(pk));
     }
-    
+    public List<OrderDTO> getAllOrders() {
+        return orderMapper.mapToListDTO(orderRepository.findAll());
+    }
     public OrderDTO assignCourier(Long orderId, Long courierId) {
         Order order = super.findByPkOr404(orderId);
         Courier courier = courierRepository.findByPk(courierId);
@@ -82,6 +84,20 @@ public class OrderService extends BaseService<Order> {
             order.setStatus(OrderStatusEnum.READY_FOR_PICKUP);
         }
         
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.mapToDTO(savedOrder);
+    }
+    public OrderDTO unassignCourier(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+
+        if (order == null || order.getCourier() == null) {
+            return null;
+        }
+
+        order.setCourier(null);
+        order.setCourierAssignmentAccepted(false);
+        order.setStatus(OrderStatusEnum.READY_FOR_PICKUP);
+
         Order savedOrder = orderRepository.save(order);
         return orderMapper.mapToDTO(savedOrder);
     }
