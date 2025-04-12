@@ -135,7 +135,6 @@ public class OrderService extends BaseService<Order> {
             order.setCourierAssignmentAccepted(true);
             order.setStatus(OrderStatusEnum.IN_TRANSIT);
         } else {
-            // Reset the courier assignment
             order.setCourier(null);
             order.setCourierAssignmentAccepted(false);
             order.setStatus(OrderStatusEnum.READY_FOR_PICKUP);
@@ -157,5 +156,14 @@ public class OrderService extends BaseService<Order> {
 
         Order savedOrder = orderRepository.save(order);
         return orderMapper.mapToDTO(savedOrder);
+    }
+
+    public List<OrderDTO> getOrderByCourierPk(Long courierPk, boolean accept) {
+        if (accept) {
+            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, true));
+        }
+        else{
+            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, false));
+        }
     }
 }

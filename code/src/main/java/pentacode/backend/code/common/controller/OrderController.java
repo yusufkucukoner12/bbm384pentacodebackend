@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
@@ -46,5 +47,11 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error");
         }
+    }
+
+    @GetMapping("/courier/{courierPk}")
+    public ResponseEntity<Object> getOrdersByCourierPk(@PathVariable Long courierPk, @RequestParam("accept") boolean accept) {
+        List<OrderDTO> orderDTOs = orderService.getOrderByCourierPk(courierPk, accept);
+        return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size());
     }
 }
