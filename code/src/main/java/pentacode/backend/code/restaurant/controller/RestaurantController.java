@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.restaurant.service.RestaurantService;
+import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -62,5 +64,42 @@ public class RestaurantController{
         return ResponseHandler.generatePkResponse("Courier assigned successfully", 
                                                 HttpStatus.OK, 
                                                 updatedOrder);
+    }
+    @GetMapping("/{restaurantId}/orders")
+    public ResponseEntity<Object> getOrdersByRestaurant(@PathVariable Long restaurantId) {
+        List<OrderDTO> orderDTOs = restaurantService.getOrdersByRestaurant(restaurantId);
+        return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size());
+    }
+    @PostMapping("/{restaurantId}/orders/{orderId}/status")
+    public ResponseEntity<Object> updateOrderStatus(
+            @PathVariable("restaurantId") Long restaurantId,
+            @PathVariable("orderId") Long orderId,
+            @RequestBody UpdateOrderStatusRequestDTO request) {
+        
+        // First verify the restaurant owns this order
+        OrderDTO orderDTO = orderService.getByPk(orderId);
+        if (orderDTO == null || !orderDTO.getRestaurant().getPk().equals(restaurantId)) {
+            return ResponseHandler.generatePkResponse(
+                "Invalid order or restaurant",
+                HttpStatus.BAD_REQUEST,
+                null
+            );
+        }
+        
+        // Update the order status
+        OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, request.getStatus());
+        if (updatedOrder == null) {
+            return ResponseHandler.generatePkResponse(
+                "Failed to update order status",
+                HttpStatus.BAD_REQUEST,
+                null
+            );
+        }
+        
+        return ResponseHandler.generatePkResponse(
+            "Order status updated successfully",
+            HttpStatus.OK,
+            updatedOrder
+        );
     }
 }
