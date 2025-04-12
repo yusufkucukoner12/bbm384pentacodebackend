@@ -2,6 +2,7 @@ package pentacode.backend.code.common.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -10,17 +11,17 @@ import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.dto.OrderItemRequestDTO;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.OrderItem;
+import pentacode.backend.code.common.entity.OrderStatusEnum;
 import pentacode.backend.code.common.mapper.OrderMapper;
 import pentacode.backend.code.common.repository.OrderItemRepository;
 import pentacode.backend.code.common.repository.OrderRepository;
 import pentacode.backend.code.common.service.base.BaseService;
+import pentacode.backend.code.courier.entity.Courier;
+import pentacode.backend.code.courier.repository.CourierRepository;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
 import pentacode.backend.code.restaurant.repository.MenuRepository;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
-import pentacode.backend.code.courier.entity.Courier;
-import pentacode.backend.code.courier.repository.CourierRepository;
-import pentacode.backend.code.common.entity.OrderStatusEnum;
 
 @Service
 public class OrderService extends BaseService<Order> {
@@ -80,6 +81,11 @@ public class OrderService extends BaseService<Order> {
         }
 
         order.setOrderItems(orderItems);
+
+        for(OrderItem orderItem : orderItems) {
+            order.setTotalPrice(order.getTotalPrice() + (orderItem.getMenu().getPrice() * orderItem.getQuantity()));
+        }
+        
 
         order = orderRepository.save(order);
 
