@@ -27,6 +27,8 @@ public class Restaurant extends BaseAudityModel {
     @OneToMany(mappedBy = "restaurant")
     private List<Menu> menus;
 
+    @OneToMany(mappedBy = "restaurant")
+    private List<Category> categories;
     
     private String imageUrl;
 }

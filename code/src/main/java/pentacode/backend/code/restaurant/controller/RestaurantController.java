@@ -1,6 +1,7 @@
 package pentacode.backend.code.restaurant.controller;
 import java.util.List;
 
+import org.aspectj.bridge.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,12 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
+import pentacode.backend.code.restaurant.dto.MenuDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.restaurant.service.RestaurantService;
 import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
@@ -102,4 +105,21 @@ public class RestaurantController{
             updatedOrder
         );
     }
+
+    @GetMapping("/menus")
+    public ResponseEntity<Object> getMenusByRestaurantAndCategory(
+        @RequestParam Long restaurantId,
+        @RequestParam String categoryName) {
+    
+    List<MenuDTO> menus = restaurantService.getMenusByRestaurantAndCategory(restaurantId, categoryName);
+
+    if (menus == null || menus.isEmpty()) {
+        return ResponseHandler.generatePkResponse(
+            "Invalid category or restaurant", HttpStatus.BAD_REQUEST, null);
+    }
+
+    return ResponseHandler.generateListResponse("Success", HttpStatus.OK, menus, menus.size());
+}
+
+
 }
