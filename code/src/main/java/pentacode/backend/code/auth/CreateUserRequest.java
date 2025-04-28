@@ -26,5 +26,8 @@ public class CreateUserRequest {
     private String email;
 
     Set<Role> authorities;
+
+    private String restaurantName;
+    private String restaurantAddress;
 }
 

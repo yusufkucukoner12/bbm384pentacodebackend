@@ -2,6 +2,7 @@ package pentacode.backend.code.auth.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +17,13 @@ import pentacode.backend.code.auth.CreateUserRequest;
 import pentacode.backend.code.auth.CreateUserResponse;
 import pentacode.backend.code.auth.LoginRequest;
 import pentacode.backend.code.auth.LoginResponse;
+import pentacode.backend.code.auth.entity.Role;
 import pentacode.backend.code.auth.entity.Token;
 import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.auth.repository.TokenRepository;
 import pentacode.backend.code.auth.repository.UserRepository;
+import pentacode.backend.code.restaurant.entity.Restaurant;
+import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
 @Service
 public class AuthenticationService implements UserDetailsService{
@@ -27,12 +31,14 @@ public class AuthenticationService implements UserDetailsService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
+    private final RestaurantRepository restaurantRepository;
  
     
     public AuthenticationService(UserRepository userRepository, 
                                   BCryptPasswordEncoder bCryptPasswordEncoder,
                                   JwtService jwtService,
-                                  TokenRepository tokenRepository) {
+                                  TokenRepository tokenRepository, RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtService = jwtService;
@@ -46,12 +52,19 @@ public class AuthenticationService implements UserDetailsService{
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
-        if (!userRepository.findByUsername(request.getUsername()).isEmpty()) {
-            return CreateUserResponse.builder().message("This username already used").build();
+        Set<Role> roles = request.getAuthorities();
+
+        if(!userRepository.findByEmailAndAuthorities(request.getEmail(), roles).isEmpty()){
+            return CreateUserResponse.builder()
+                    .message("Email already exists")
+                    .build();
         }
-        if (!userRepository.findByEmail(request.getEmail()).isEmpty()) {
-            return CreateUserResponse.builder().message("This email already used").build();
+        if(!userRepository.findByUsernameAndAuthorities(request.getUsername(), roles).isEmpty()){
+            return CreateUserResponse.builder()
+                    .message("Username already exists")
+                    .build();
         }
+
         User newUser = User.builder()
                 .name(request.getName())
                 .username(request.getUsername())
@@ -63,6 +76,10 @@ public class AuthenticationService implements UserDetailsService{
                 .isEnabled(true)
                 .accountNonLocked(true)
                 .build();
+
+        // get the first role
+        Role role = roles.stream().findFirst().orElse(null);
+        System.out.println("Role: " + role);
 
         var registeredUser = userRepository.save(newUser);
         var token = jwtService.generateToken(registeredUser.getUsername());
@@ -94,5 +111,9 @@ public class AuthenticationService implements UserDetailsService{
             token.setRevoked(true);
         }
         tokenRepository.saveAll(validUsersToken);
+    }
+
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

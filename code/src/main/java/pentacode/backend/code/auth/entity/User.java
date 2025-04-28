@@ -1,16 +1,23 @@
 package pentacode.backend.code.auth.entity;
 
+import java.util.Collection;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
+
+import pentacode.backend.code.restaurant.entity.Restaurant;
 
 @Data
 @Entity
@@ -24,13 +31,11 @@ public class User implements UserDetails {
     private Long id;
     private String name;
 
-    @Column(unique = true)
     private String username;
 
     @JsonIgnore
     private String password;
 
-    @Column(unique = true)
     @Email
     private String email;
 
@@ -39,13 +44,24 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
 
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
 
+    // Other fields and methods...
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+
     @JsonProperty
     private String token;
+
+    @OneToOne
+    @JoinColumn(name = "restaurant_id")  // This will create a "restaurant_id" foreign key column in users table
+    private Restaurant restaurant;
 }

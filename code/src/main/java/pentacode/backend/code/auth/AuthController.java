@@ -24,11 +24,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<CreateUserResponse> addNewUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        System.out.println("asdasdsa");
         return new ResponseEntity<>(authenticationService.createUser(createUserRequest),HttpStatus.CREATED);
     }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> generateToken(@Valid @RequestBody LoginRequest authRequest) {
-        return ResponseEntity.ok(loginService.login(authRequest));
+        return new ResponseEntity<>(loginService.login(authRequest), HttpStatus.OK);
     }
 
 }

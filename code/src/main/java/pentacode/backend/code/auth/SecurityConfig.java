@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import pentacode.backend.code.auth.service.AuthenticationService;
+import pentacode.backend.code.auth.service.LogoutService;
 
 @Configuration
 @EnableWebSecurity
@@ -28,10 +29,10 @@ public class SecurityConfig {
     private final JWTAuthFilter jwtAuthFilter;
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
-    private final LogoutHandler logoutHandler;
+    private final LogoutService logoutHandler;
 
 
-    public SecurityConfig(JWTAuthFilter jwtAuthFilter, AuthenticationService userService, PasswordEncoder passwordEncoder, LogoutHandler logoutHandler) {
+    public SecurityConfig(JWTAuthFilter jwtAuthFilter, AuthenticationService userService, PasswordEncoder passwordEncoder, LogoutService logoutHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -44,11 +45,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
-                                "/api/**"
+                                "/api/auth/login",
+                                "/api/auth/register"
                         ).permitAll()
                 )
                 .authorizeHttpRequests(x ->
-                        x.requestMatchers("/auth/user").authenticated()
+                        x.requestMatchers("/api/couriers/**").hasRole("USER")
                                 .requestMatchers("/auth/admin").hasRole("ADMIN")
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

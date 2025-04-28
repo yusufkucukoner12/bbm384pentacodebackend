@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginService {
-     private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
 
