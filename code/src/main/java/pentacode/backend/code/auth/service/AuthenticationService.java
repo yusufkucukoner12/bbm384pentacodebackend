@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import pentacode.backend.code.admin.AdminRepository;
 import pentacode.backend.code.auth.CreateUserRequest;
 import pentacode.backend.code.auth.CreateUserResponse;
 import pentacode.backend.code.auth.LoginRequest;
@@ -22,6 +23,10 @@ import pentacode.backend.code.auth.entity.Token;
 import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.auth.repository.TokenRepository;
 import pentacode.backend.code.auth.repository.UserRepository;
+import pentacode.backend.code.courier.entity.Courier;
+import pentacode.backend.code.courier.repository.CourierRepository;
+import pentacode.backend.code.customer.entity.Customer;
+import pentacode.backend.code.customer.repository.CustomerRepository;
 import pentacode.backend.code.restaurant.entity.Restaurant;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
@@ -32,17 +37,29 @@ public class AuthenticationService implements UserDetailsService{
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CourierRepository courierRepository;
+    private final CustomerRepository customerRepository;
+    private final AdminRepository adminRepository;
+
+
  
     
     public AuthenticationService(UserRepository userRepository, 
                                   BCryptPasswordEncoder bCryptPasswordEncoder,
                                   JwtService jwtService,
-                                  TokenRepository tokenRepository, RestaurantRepository restaurantRepository) {
+                                  TokenRepository tokenRepository, RestaurantRepository restaurantRepository,
+                                  CourierRepository courierRepository,
+                                  CustomerRepository customerRepository,
+                                  AdminRepository adminRepository) {
+
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtService = jwtService;
         this.tokenRepository = tokenRepository;
+        this.courierRepository = courierRepository;
+        this.customerRepository = customerRepository;
+        this.adminRepository = adminRepository;
     }
 
     @Override
@@ -77,9 +94,33 @@ public class AuthenticationService implements UserDetailsService{
                 .accountNonLocked(true)
                 .build();
 
-        // get the first role
         Role role = roles.stream().findFirst().orElse(null);
-        System.out.println("Role: " + role);
+
+
+        if(role.equals(Role.ROLE_RESTAURANT)){
+            // initialize Restaurant object
+            Restaurant restaurant = new Restaurant();
+            restaurantRepository.save(restaurant);
+            newUser.setRestaurant(restaurant);
+        }
+        else if(role.equals(Role.ROLE_COURIER)){
+            // initialize Courier object
+            Courier courier = new Courier();
+            courierRepository.save(courier);
+            newUser.setCourier(courier);
+        }
+        else if(role.equals(Role.ROLE_CUSTOMER)){
+            // initialize Customer object
+            Customer customer = new Customer();
+            customerRepository.save(customer);
+            newUser.setCustomer(customer);
+        }
+        else if(role.equals(Role.ROLE_ADMIN)){
+            // initialize Admin object
+            Admin admin = new Admin();
+            adminRepository.save(admin);
+            newUser.setAdmin(admin);
+        }
 
         var registeredUser = userRepository.save(newUser);
         var token = jwtService.generateToken(registeredUser.getUsername());
