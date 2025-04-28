@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import pentacode.backend.code.auth.repository.TokenRepository;
+
 @Service
 public class JwtService {
+    private final TokenRepository tokenRepository;
+
+    public JwtService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
 
     @Value("${jwt.key}")
     private String SECRET;
@@ -44,8 +53,15 @@ public class JwtService {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUser(token);
-        Date expirationDate = extractExpiration(token);
-        return isUsername(username, userDetails) && isExpired(expirationDate);
+        var storedToken = tokenRepository.findByUserToken(token)
+                .orElse(null);
+        if (storedToken == null) {
+            return false;
+        }
+
+        return isUsername(username, userDetails) && 
+                !storedToken.isExpired() &&
+                !storedToken.isRevoked();
     }
 
     private boolean isUsername(String username, UserDetails userDetails) {

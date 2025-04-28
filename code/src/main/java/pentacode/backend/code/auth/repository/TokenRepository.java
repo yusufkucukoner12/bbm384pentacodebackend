@@ -9,7 +9,9 @@ import java.util.Optional;
 import pentacode.backend.code.auth.entity.Token;
 
 public interface TokenRepository extends JpaRepository<Token, Long> {
-    Optional<Token> findByUserToken(String token);
+    // write find by user token with sql query
+    @Query("select t from Token t where t.user_token = :userToken")
+    Optional<Token> findByUserToken(String userToken);
 
     @Query("""
                     select t from Token t inner join User u on t.user.id = u.id
