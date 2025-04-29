@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,7 @@ public class Category extends BaseAudityModel{
     
     @ManyToMany(mappedBy = "categories")
     private List<Menu> menus;
+
+    @ManyToOne
+    private Restaurant restaurant;
 }

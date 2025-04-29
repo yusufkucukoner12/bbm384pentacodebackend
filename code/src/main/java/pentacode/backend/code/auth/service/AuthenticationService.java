@@ -70,10 +70,10 @@ public class AuthenticationService implements UserDetailsService{
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
-        System.out.println(request);
 
         Set<Role> roles = request.getAuthorities();
-
+        request.setUsername(request.getUsername()+request.getAuthorities().toString());
+        System.out.println(request.getUsername());
         if(!userRepository.findByEmailAndAuthorities(request.getEmail(), roles).isEmpty()){
             return CreateUserResponse.builder()
                     .message("Email already exists")
@@ -174,5 +174,9 @@ public class AuthenticationService implements UserDetailsService{
 
     public Optional<User> getByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> getByUsernameAndOptionalToken(String username, Set<Role> roles) {
+        return userRepository.findByUsernameAndAuthorities(username, roles);
     }
 }

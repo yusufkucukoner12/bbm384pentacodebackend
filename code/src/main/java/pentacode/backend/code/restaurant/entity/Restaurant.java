@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,9 @@ public class Restaurant extends BaseAudityModel {
 
     @OneToMany(mappedBy = "restaurant")
     private List<Category> categories;
+
+    @ManyToOne
+    private Restaurant restaurant;
     
     private String imageUrl;
     private String address;

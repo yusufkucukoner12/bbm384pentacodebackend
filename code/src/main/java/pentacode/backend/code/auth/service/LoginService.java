@@ -24,6 +24,7 @@ public class LoginService {
     }
 
     public LoginResponse login(LoginRequest authRequest) {
+        authRequest.setUsername(authRequest.getUsername()+authRequest.getAuthorities().toString());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             var user = authenticationService.getByUsername(authRequest.getUsername()).orElseThrow();
