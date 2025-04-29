@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
+import pentacode.backend.code.admin.Admin;
+import pentacode.backend.code.courier.entity.Courier;
+import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Restaurant;
 
 @Data
@@ -50,13 +53,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
 
-    // Other fields and methods...
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
 
     @JsonProperty
     private String token;
@@ -64,4 +65,17 @@ public class User implements UserDetails {
     @OneToOne
     @JoinColumn(name = "restaurant_id")  // This will create a "restaurant_id" foreign key column in users table
     private Restaurant restaurant;
+
+    @OneToOne
+    @JoinColumn(name = "courier_id")  // This will create a "courier_id" foreign key column in users table
+    private Courier courier;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")  // This will create a "customer_id" foreign key column in users table
+    private Customer customer;
+    
+    @OneToOne
+    @JoinColumn(name = "admin_id")  // This will create a "admin_id" foreign key column in users table
+    private Admin admin;
+    
 }

@@ -14,5 +14,4 @@ import pentacode.backend.code.common.entity.base.BaseAudityModel;
 @AllArgsConstructor
 public class Customer extends BaseAudityModel{
     private String address;
-    
 }

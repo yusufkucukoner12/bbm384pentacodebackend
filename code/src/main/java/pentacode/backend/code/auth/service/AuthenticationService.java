@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import pentacode.backend.code.admin.Admin;
 import pentacode.backend.code.admin.AdminRepository;
 import pentacode.backend.code.auth.CreateUserRequest;
 import pentacode.backend.code.auth.CreateUserResponse;
