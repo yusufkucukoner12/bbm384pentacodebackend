@@ -4,6 +4,7 @@ import java.util.List;
 import org.aspectj.bridge.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
@@ -29,7 +31,8 @@ public class RestaurantController{
     private final OrderService orderService;
 
     @GetMapping("{pk}")
-    public ResponseEntity<Object> getRestByPk(@PathVariable Long pk){
+    public ResponseEntity<Object> getRestByPk(@AuthenticationPrincipal User user){
+        Long pk = user.getRestaurant().getPk();
         return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, restaurantService.getByPk(pk));
     }
 
@@ -39,16 +42,17 @@ public class RestaurantController{
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
     }   
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<Object> getAllRestaurants(){
         List<RestaurantDTO> restaurantDTOs = restaurantService.getAllRestaurants();
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
     }
     
-    @PostMapping("/{restaurantId}/orders/{orderId}/assign-courier/{courierId}")
-    public ResponseEntity<Object> assignCourier(@PathVariable("restaurantId") Long restaurantId,
+    @PostMapping("/orders/{orderId}/assign-courier/{courierId}")
+    public ResponseEntity<Object> assignCourier(@AuthenticationPrincipal User user,
                                               @PathVariable("orderId") Long orderId,
                                               @PathVariable("courierId") Long courierId) {
+        Long restaurantId = user.getRestaurant().getPk();
         // First verify the restaurant owns this order
         OrderDTO orderDTO = orderService.getByPk(orderId);
         if (orderDTO == null || !orderDTO.getRestaurant().getPk().equals(restaurantId)) {
@@ -68,18 +72,18 @@ public class RestaurantController{
                                                 HttpStatus.OK, 
                                                 updatedOrder);
     }
-    @GetMapping("/{restaurantId}/orders")
-    public ResponseEntity<Object> getOrdersByRestaurant(@PathVariable Long restaurantId) {
+    @GetMapping("/get/orders")
+    public ResponseEntity<Object> getOrdersByRestaurant(@AuthenticationPrincipal User user) {
+        Long restaurantId = user.getRestaurant().getPk();
         List<OrderDTO> orderDTOs = restaurantService.getOrdersByRestaurant(restaurantId);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size());
     }
-    @PostMapping("/{restaurantId}/orders/{orderId}/status")
+    @PostMapping("/orders/{orderId}/status")
     public ResponseEntity<Object> updateOrderStatus(
-            @PathVariable("restaurantId") Long restaurantId,
+            @AuthenticationPrincipal User user,
             @PathVariable("orderId") Long orderId,
             @RequestBody UpdateOrderStatusRequestDTO request) {
-        
-        // First verify the restaurant owns this order
+        Long restaurantId = user.getRestaurant().getPk();
         OrderDTO orderDTO = orderService.getByPk(orderId);
         if (orderDTO == null || !orderDTO.getRestaurant().getPk().equals(restaurantId)) {
             return ResponseHandler.generatePkResponse(
