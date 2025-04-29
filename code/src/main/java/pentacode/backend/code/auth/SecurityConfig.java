@@ -64,7 +64,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -79,19 +79,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
                                 "/api/auth/register",
-                                "/api/auth/login"
+                                "/api/auth/login",
+                                "/api/auth/validate-token"
                         ).permitAll()
                 )
                 .authorizeHttpRequests(x ->
                         x.requestMatchers("/api/restaurant/all").hasRole("CUSTOMER")
                            .requestMatchers("/auth/admin").hasRole("ADMIN")
-                                .requestMatchers("/api/auth/validate-token").hasRole("CUSTOMER")
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(x -> {
-                    x.logoutUrl("/auth/logout");
+                    x.logoutUrl("api/auth/logout");
                     x.addLogoutHandler(logoutHandler);
                     x.logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()));
                 })

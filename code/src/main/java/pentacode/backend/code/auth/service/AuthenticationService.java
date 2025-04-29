@@ -134,6 +134,7 @@ public class AuthenticationService implements UserDetailsService{
 
 
     public void saveToken(User user, String stringToken) {
+        user.setToken(stringToken);
         Token token = Token.builder()
                 .user_token(stringToken)
                 .user(user)
@@ -141,6 +142,8 @@ public class AuthenticationService implements UserDetailsService{
                 .expired(false)
                 .build();
         tokenRepository.save(token);
+        user.setTokenEntity(token);
+        userRepository.save(user);
     }
 
     public void allTokenExpired(User user) {

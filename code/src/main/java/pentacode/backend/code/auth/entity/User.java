@@ -62,6 +62,12 @@ public class User implements UserDetails {
     @JsonProperty
     private String token;
 
+    // one to one token
+    @OneToOne
+    @JoinColumn(name = "token_id")
+    private Token tokenEntity;
+
+
     @OneToOne
     @JoinColumn(name = "restaurant_id")  // This will create a "restaurant_id" foreign key column in users table
     private Restaurant restaurant;

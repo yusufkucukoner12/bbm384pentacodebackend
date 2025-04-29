@@ -15,11 +15,7 @@ public class TokenService {
 
     public boolean isTokenValid(String token) {
         var storedToken = tokenRepository.findByUserToken(token);
+        System.out.println("Stored token: " + storedToken);
         return !storedToken.get().isExpired() && !storedToken.get().isRevoked();
     }
-
-
-
-
-    
 }
