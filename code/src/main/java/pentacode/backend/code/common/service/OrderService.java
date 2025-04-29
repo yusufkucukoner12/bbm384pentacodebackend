@@ -158,7 +158,10 @@ public class OrderService extends BaseService<Order> {
         return orderMapper.mapToDTO(savedOrder);
     }
 
-    public List<OrderDTO> getOrderByCourierPk(Long courierPk, boolean accept) {
+    public List<OrderDTO> getOrderByCourierPk(Long courierPk, boolean accept, boolean past) {
+        if (past) {
+            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndStatus(courierPk, OrderStatusEnum.DELIVERED));
+        }
         if (accept) {
             return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, true));
         }

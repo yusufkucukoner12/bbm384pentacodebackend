@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.CreateOrderRequestDTO;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.service.OrderService;
@@ -49,9 +51,11 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/courier/{courierPk}")
-    public ResponseEntity<Object> getOrdersByCourierPk(@PathVariable Long courierPk, @RequestParam("accept") boolean accept) {
-        List<OrderDTO> orderDTOs = orderService.getOrderByCourierPk(courierPk, accept);
+    @GetMapping("/courier/orders")
+    public ResponseEntity<Object> getOrdersByCourierPk(@AuthenticationPrincipal User user, @RequestParam("accept") boolean accept, @RequestParam("past") boolean past) {
+        Long courierPk = user.getCourier().getPk();
+        List<OrderDTO> orderDTOs = orderService.getOrderByCourierPk(courierPk, accept, past);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size());
     }
 }
+

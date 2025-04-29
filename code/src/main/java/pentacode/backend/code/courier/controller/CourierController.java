@@ -1,9 +1,15 @@
 package pentacode.backend.code.courier.controller;
 
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.courier.dto.CourierDTO;
 import pentacode.backend.code.courier.service.CourierService;
@@ -27,7 +33,7 @@ public class CourierController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getCourierById(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getCourierById(@PathVariable("id") Long id,  @AuthenticationPrincipal User user) {
         CourierDTO courier = courierService.getByPk(id);
         return ResponseHandler.generatePkResponse("Courier fetched successfully", 
                                                  HttpStatus.OK, 
