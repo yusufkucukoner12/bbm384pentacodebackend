@@ -3,6 +3,7 @@ package pentacode.backend.code.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -80,12 +81,21 @@ public class SecurityConfig {
                         x.requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
-                                "/api/auth/validate-token"
+                                "/api/auth/validate-token",
+                                "/api/restaurant/**"
                         ).permitAll()
                 )
                 .authorizeHttpRequests(x ->
                         x.requestMatchers("/api/restaurant/all").hasRole("CUSTOMER")
+                        .requestMatchers("/api/restaurant/get").hasRole("CUSTOMER")
+                        .requestMatchers("/api/order/courier/**").hasRole("COURIER")
+                        .requestMatchers("/api/restaurant/**").hasRole("RESTAURANT")
                            .requestMatchers("/auth/admin").hasRole("ADMIN")
+                           .requestMatchers("/api/couriers/available").hasRole("RESTAURANT")
+                           .requestMatchers("/api/restaurant/**").hasRole("CUSTOMER")
+                           .requestMatchers("/api/order/finish-order").hasRole("CUSTOMER")
+                           .requestMatchers("/api/restaurant/orders/*/status").hasRole("RESTAURANT")
+                           .requestMatchers("/api/restaurant/orders/*/assign-courier/*").hasRole("RESTAURANT")
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

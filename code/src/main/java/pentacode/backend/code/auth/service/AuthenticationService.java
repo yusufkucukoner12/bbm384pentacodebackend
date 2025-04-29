@@ -101,12 +101,18 @@ public class AuthenticationService implements UserDetailsService{
         if(role.equals(Role.ROLE_RESTAURANT)){
             // initialize Restaurant object
             Restaurant restaurant = new Restaurant();
+            restaurant.setName("Yusuf'un dükkanı...");
             restaurantRepository.save(restaurant);
             newUser.setRestaurant(restaurant);
         }
         else if(role.equals(Role.ROLE_COURIER)){
             // initialize Courier object
             Courier courier = new Courier();
+            courier.setName(request.getName());
+            courier.setPhoneNumber("05523375123");
+            courier.setAvailable(true);
+            courier.setOnline(true);
+            
             courierRepository.save(courier);
             newUser.setCourier(courier);
         }
@@ -125,7 +131,6 @@ public class AuthenticationService implements UserDetailsService{
 
         var registeredUser = userRepository.save(newUser);
         var token = jwtService.generateToken(registeredUser.getUsername());
-        registeredUser.setToken(token);
         saveToken(registeredUser, token);
         return CreateUserResponse.builder()
                 .user(registeredUser)
