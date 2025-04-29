@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,4 +34,12 @@ public class Restaurant extends BaseAudityModel {
     private List<Category> categories;
     
     private String imageUrl;
+    private String address;
+    private String phoneNumber;
+    private String description;
+
+    @Email
+    private String email;
+
+
 }

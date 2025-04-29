@@ -27,7 +27,15 @@ public class CreateUserRequest {
 
     Set<Role> authorities;
 
-    private String restaurantName;
     private String restaurantAddress;
+    private String restaurantPhoneNumber;
+    private String restaurantDescription;
+
+    private String courierPhoneNumber;
+    private boolean isAvailable;
+    private boolean isOnline;
+
+    private String customerAddress;
+    private String customerPhoneNumber;
 }
 

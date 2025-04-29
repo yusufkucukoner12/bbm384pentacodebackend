@@ -3,6 +3,8 @@ package pentacode.backend.code.courier.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,4 +33,8 @@ public class Courier extends BaseAudityModel {
     
     @OneToMany(mappedBy = "courier")
     private List<Order> orders;
+
+    @Column(nullable = false)
+    @Email
+    private String email;
 }

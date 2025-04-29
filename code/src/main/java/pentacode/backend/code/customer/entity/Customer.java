@@ -1,6 +1,7 @@
 package pentacode.backend.code.customer.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,11 @@ import pentacode.backend.code.common.entity.base.BaseAudityModel;
 @AllArgsConstructor
 public class Customer extends BaseAudityModel{
     private String address;
+    private String phoneNumber;
+    private String name;
+
+    @Email
+    private String email;
+
+
 }

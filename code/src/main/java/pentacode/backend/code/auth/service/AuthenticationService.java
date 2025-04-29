@@ -70,6 +70,8 @@ public class AuthenticationService implements UserDetailsService{
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
+        System.out.println(request);
+
         Set<Role> roles = request.getAuthorities();
 
         if(!userRepository.findByEmailAndAuthorities(request.getEmail(), roles).isEmpty()){
@@ -101,7 +103,11 @@ public class AuthenticationService implements UserDetailsService{
         if(role.equals(Role.ROLE_RESTAURANT)){
             // initialize Restaurant object
             Restaurant restaurant = new Restaurant();
-            restaurant.setName("Yusuf'un dükkanı...");
+            restaurant.setName(request.getName());
+            restaurant.setAddress(request.getRestaurantAddress());
+            restaurant.setPhoneNumber(request.getRestaurantPhoneNumber());
+            restaurant.setDescription(request.getRestaurantDescription());
+            restaurant.setEmail(request.getEmail());
             restaurantRepository.save(restaurant);
             newUser.setRestaurant(restaurant);
         }
@@ -109,16 +115,19 @@ public class AuthenticationService implements UserDetailsService{
             // initialize Courier object
             Courier courier = new Courier();
             courier.setName(request.getName());
-            courier.setPhoneNumber("05523375123");
-            courier.setAvailable(true);
-            courier.setOnline(true);
-            
+            courier.setPhoneNumber(request.getCourierPhoneNumber());
+            courier.setAvailable(request.isAvailable());
+            courier.setOnline(request.isOnline());
+            courier.setEmail(request.getEmail());
             courierRepository.save(courier);
             newUser.setCourier(courier);
         }
         else if(role.equals(Role.ROLE_CUSTOMER)){
-            // initialize Customer object
             Customer customer = new Customer();
+            customer.setName(request.getName());
+            customer.setAddress(request.getCustomerAddress());
+            customer.setPhoneNumber(request.getCustomerPhoneNumber());
+            customer.setEmail(request.getEmail());
             customerRepository.save(customer);
             newUser.setCustomer(customer);
         }
