@@ -1,11 +1,18 @@
 package pentacode.backend.code.customer.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 
 @Entity
@@ -20,6 +27,14 @@ public class Customer extends BaseAudityModel{
 
     @Email
     private String email;
+
+    @OneToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "pk")
+    private Order order;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orderHistory;
+
 
 
 }

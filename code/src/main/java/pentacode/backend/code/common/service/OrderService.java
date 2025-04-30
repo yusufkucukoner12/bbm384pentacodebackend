@@ -18,6 +18,7 @@ import pentacode.backend.code.common.repository.OrderRepository;
 import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.courier.repository.CourierRepository;
+import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
 import pentacode.backend.code.restaurant.repository.MenuRepository;
@@ -205,6 +206,12 @@ public class OrderService extends BaseService<Order> {
             // Invalid status value
             return null;
         }
+    }
+
+    public Order createOrder(Customer customer) {
+        Order order = new Order();
+        customer.setOrder(order);
+        return orderRepository.save(order);
     }
 
 }

@@ -26,8 +26,10 @@ import pentacode.backend.code.auth.repository.TokenRepository;
 import pentacode.backend.code.auth.repository.UserRepository;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.courier.repository.CourierRepository;
+import pentacode.backend.code.customer.controller.CustomerController;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.customer.repository.CustomerRepository;
+import pentacode.backend.code.customer.service.CustomerService;
 import pentacode.backend.code.restaurant.entity.Restaurant;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
@@ -41,6 +43,7 @@ public class AuthenticationService implements UserDetailsService{
     private final CourierRepository courierRepository;
     private final CustomerRepository customerRepository;
     private final AdminRepository adminRepository;
+    private final CustomerService customerService;
 
 
  
@@ -51,7 +54,8 @@ public class AuthenticationService implements UserDetailsService{
                                   TokenRepository tokenRepository, RestaurantRepository restaurantRepository,
                                   CourierRepository courierRepository,
                                   CustomerRepository customerRepository,
-                                  AdminRepository adminRepository) {
+                                  AdminRepository adminRepository,
+                                  CustomerService customerService) {
 
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
@@ -61,6 +65,7 @@ public class AuthenticationService implements UserDetailsService{
         this.courierRepository = courierRepository;
         this.customerRepository = customerRepository;
         this.adminRepository = adminRepository;
+        this.customerService = customerService;
     }
 
     @Override
@@ -130,6 +135,7 @@ public class AuthenticationService implements UserDetailsService{
             customer.setEmail(request.getEmail());
             customerRepository.save(customer);
             newUser.setCustomer(customer);
+            customerService.createOrder(customer);
         }
         else if(role.equals(Role.ROLE_ADMIN)){
             // initialize Admin object

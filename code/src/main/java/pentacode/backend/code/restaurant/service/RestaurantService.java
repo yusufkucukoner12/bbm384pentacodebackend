@@ -40,6 +40,10 @@ public class RestaurantService extends BaseService<Restaurant>{
         return restaurantMapper.mapToDTO(super.findByPkOr404(pk));
     }
 
+    public Restaurant getRestaurantByPk(Long pk){
+        return restaurantRepository.findByPk(pk);
+    }
+
     public RestaurantDTO getRestaurant(Long pk){
         return restaurantMapper.mapToDTO(restaurantRepository.findByPk(pk));
     }

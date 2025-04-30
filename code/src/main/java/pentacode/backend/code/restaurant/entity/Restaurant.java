@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
@@ -28,7 +29,7 @@ public class Restaurant extends BaseAudityModel {
     @OneToMany(mappedBy = "restaurant")
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", fetch=FetchType.EAGER)
     private List<Menu> menus;
 
     @OneToMany(mappedBy = "restaurant")

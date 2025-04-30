@@ -33,8 +33,9 @@ public class MenuService extends BaseService<Menu> {
         return menuMapper.mapToDTO(super.findByPkOr404(pk));
     }
 
-    public MenuDTO getMenu(Long pk) {
-        return menuMapper.mapToDTO(menuRepository.findByPk(pk));
+    public Menu getMenu(Long pk) {
+        return menuRepository.findById(pk)
+                .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
     }
     
     public List<MenuDTO> getMenuByRestaurant(Long restaurantPk) {

@@ -17,14 +17,20 @@ import lombok.AllArgsConstructor;
 import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.CreateOrderRequestDTO;
 import pentacode.backend.code.common.dto.OrderDTO;
+import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
 
 @RestController
 @RequestMapping("/api/order")
-@AllArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+   
 
     @GetMapping("{pk}")
     public ResponseEntity<Object> getOrderByPk(@PathVariable Long pk){
