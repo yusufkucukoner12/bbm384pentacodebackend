@@ -2,6 +2,8 @@ package pentacode.backend.code.restaurant.dto;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +12,25 @@ import lombok.Setter;
 @Setter
 @Builder
 public class MenuDTO {
-    public Long pk;
-    public String name;
-    public String description;
-    public double price;
+    private Long pk;
+    
+    @NotBlank(message = "Name is required")
+    private String name;
+    
+    private String description;
+    
+    @PositiveOrZero(message = "Price must be zero or positive")
+    private double price;
+    
+    private String imageUrl;
+    
+    private boolean isAvailable;
+    
+    private boolean isDrink;
+    
+    private String category;
+    
+    private List<Long> categoryPks;
+    
     private List<FoodDTO> foods;
 }
