@@ -99,6 +99,8 @@ public class SecurityConfig {
                             .requestMatchers("/api/menu/**").hasRole("RESTAURANT")
                             .requestMatchers("/api/customer/update-order/*").hasRole("CUSTOMER")
                             .requestMatchers("/api/customer/get-order").hasRole("CUSTOMER")
+                            .requestMatchers("/api/order/courier/orders").hasRole("COURIER")
+                            .requestMatchers("/api/couriers/**").hasRole("COURIER")
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

@@ -125,17 +125,27 @@ public class OrderService extends BaseService<Order> {
         return orderMapper.mapToDTO(savedOrder);
     }
     
-    public OrderDTO courierAcceptAssignment(Long orderId, boolean accepted) {
+    public OrderDTO courierAcceptAssignment(Long orderId, String status) {
         Order order = super.findByPkOr404(orderId);
         
         if (order == null || order.getCourier() == null) {
             return null;
         }
         
-        if (accepted) {
+        if (status.equals("IN_TRANSIT")) {
             order.setCourierAssignmentAccepted(true);
             order.setStatus(OrderStatusEnum.IN_TRANSIT);
-        } else {
+        } 
+        else if (status.equals("DELIVERED")) {
+            order.setStatus(OrderStatusEnum.DELIVERED);
+        } 
+        else if (status.equals("REJECTED")) {
+            order.setStatus(OrderStatusEnum.REJECTED);
+            order.setCourier(null);
+            order.setCourierAssignmentAccepted(false);
+            
+        }
+        else {
             order.setCourier(null);
             order.setCourierAssignmentAccepted(false);
             order.setStatus(OrderStatusEnum.READY_FOR_PICKUP);
@@ -164,7 +174,7 @@ public class OrderService extends BaseService<Order> {
             return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndStatus(courierPk, OrderStatusEnum.DELIVERED));
         }
         if (accept) {
-            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, true));
+            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndStatus(courierPk, OrderStatusEnum.IN_TRANSIT));
         }
         else{
             return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, false));
