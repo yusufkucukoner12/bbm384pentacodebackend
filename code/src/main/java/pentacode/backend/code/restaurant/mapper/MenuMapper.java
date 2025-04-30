@@ -17,9 +17,13 @@ import pentacode.backend.code.restaurant.entity.Menu;
 public interface MenuMapper extends BaseMapper<Menu, MenuDTO> {
     
     @Mapping(source = "categories", target = "categoryPks", qualifiedByName = "categoriesToPks")
+    @Mapping(source = "drink", target = "isDrink")
+    @Mapping(source = "available", target = "isAvailable")
     MenuDTO mapToDTO(Menu menu);
     
     @Mapping(source = "categoryPks", target = "categories", ignore = true)
+    @Mapping(source = "drink", target = "drink")
+    @Mapping(source = "available", target = "available")
     Menu mapToEntity(MenuDTO menuDTO);
     
     List<MenuDTO> mapToListDTO(List<Menu> menus);

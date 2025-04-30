@@ -2,6 +2,8 @@ package pentacode.backend.code.restaurant.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -24,8 +26,10 @@ public class MenuDTO {
     
     private String imageUrl;
     
+    @JsonProperty("isAvailable")
     private boolean isAvailable;
-    
+
+    @JsonProperty("isDrink")
     private boolean isDrink;
     
     private String category;

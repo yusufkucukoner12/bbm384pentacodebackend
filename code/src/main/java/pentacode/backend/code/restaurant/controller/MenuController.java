@@ -46,7 +46,18 @@ public class MenuController {
     public ResponseEntity<Object> createMenu(
             @Valid @RequestBody MenuDTO menuDTO,
             @AuthenticationPrincipal User user) {
+                System.out.println("Received MenuDTO: " + menuDTO);
+                System.out.println("Received isDrink: " + menuDTO.isDrink());
+                System.out.println("Received isAvailable: " + menuDTO.isAvailable());
         MenuDTO createdMenu = menuService.createMenu(menuDTO, user.getRestaurant().getPk());
+        System.out.println("Created Menu: " + createdMenu);
+        System.out.println("Created Menu PK: " + createdMenu.getPk());
+        System.out.println("Created Menu Name: " + createdMenu.getName());
+        System.out.println("Created Menu Description: " + createdMenu.getDescription());
+        System.out.println("Created Menu Price: " + createdMenu.getPrice());
+        System.out.println("Created Menu Image URL: " + createdMenu.getImageUrl());
+        System.out.println("Created Menu Is Available: " + createdMenu.isAvailable());
+        System.out.println("Created Menu Is Drink: " + createdMenu.isDrink());
         return ResponseHandler.generatePkResponse("Menu created successfully", HttpStatus.CREATED, createdMenu);
     }
 
