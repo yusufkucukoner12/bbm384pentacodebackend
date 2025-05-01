@@ -120,6 +120,28 @@ public class CustomerService extends BaseService<Customer>{
             throw new IllegalArgumentException("Restaurant not assigned to the order.");
         }
         order.setStatus(OrderStatusEnum.PLACED);
+        customer.addOrderToHistory(order);
+        System.out.println("Order items: " + order.getOrderItems());
         orderRepository.save(order);
+        Order order1 = new Order();
+        customer.setOrder(order1);
+        order1.setCustomer(customer);
+        orderRepository.save(order1);
+        customerRepository.save(customer);
+    }
+
+    public List<OrderDTO> getActiveOrders(Customer customer, boolean old) {
+        if (old) {
+            List<Order> orders = customer.getOrderHistory().stream()
+                    .filter(order -> order.getStatus() == OrderStatusEnum.DELIVERED)
+                    .toList();
+            return orderMapper.mapToListDTO(orders);
+        }
+        else{
+            List<Order> orders = customer.getOrderHistory().stream()
+                    .filter(order -> order.getStatus() == OrderStatusEnum.PLACED)
+                    .toList();
+            return orderMapper.mapToListDTO(orders);
+        }
     }
 }

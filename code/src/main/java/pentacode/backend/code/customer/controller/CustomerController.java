@@ -1,5 +1,7 @@
 package pentacode.backend.code.customer.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -88,5 +90,17 @@ public class CustomerController {
         catch (Exception e) {
             return ResponseHandler.generatePkResponse("Error placing order", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
-    }    
+    }
+
+    @GetMapping("/get-active-orders")
+    public ResponseEntity<Object> getActiveOrders(@AuthenticationPrincipal User user, @RequestParam boolean old) {
+        try {
+            Customer customer = user.getCustomer();
+            List<OrderDTO> orders = customerService.getActiveOrders(customer, old);
+            return ResponseHandler.generatePkResponse("Active orders retrieved successfully", HttpStatus.OK, orders);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving active orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
 }
