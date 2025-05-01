@@ -65,6 +65,8 @@ public class MenuService extends BaseService<Menu> {
             spec = spec.and((root, query, cb) -> 
                 cb.equal(root.get("isDrink"), isDrink));
         }
+        spec = spec.and((root, query, cb) -> 
+            cb.equal(root.get("isDeleted"), false));
 
         List<Menu> menus = menuRepository.findAll(spec);
 
@@ -154,6 +156,6 @@ public class MenuService extends BaseService<Menu> {
         if (!menu.getRestaurant().getPk().equals(restaurantPk)) {
             throw new IllegalAccessError("Menu does not belong to this restaurant");
         }
-        menuRepository.delete(menu);
+        menu.setDeleted(true);
     }
 }

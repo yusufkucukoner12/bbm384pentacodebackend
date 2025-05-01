@@ -51,4 +51,7 @@ public class Menu extends BaseAudityModel{
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }
