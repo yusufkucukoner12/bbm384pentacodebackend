@@ -16,4 +16,8 @@ public class RestaurantDTO {
     public Integer version;
     private List<MenuDTO> menus;
     private String imageUrl;
+    private String address;
+    private String phoneNumber;
+    private String description;
+    private String email;
 }

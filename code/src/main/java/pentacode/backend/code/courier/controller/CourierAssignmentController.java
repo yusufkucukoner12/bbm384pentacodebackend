@@ -27,25 +27,25 @@ public class CourierAssignmentController {
     public ResponseEntity<Object> respondToAssignment(@AuthenticationPrincipal User user,
                                                      @PathVariable("orderId") Long orderId,
                                                      @RequestParam("status") String status) {
-        Long courierId = user.getCourier().getPk();
-        OrderDTO order = orderService.getByPk(orderId);
-        
-        if (order == null || order.getCourier() == null || !order.getCourier().getPk().equals(courierId)) {
-            return ResponseHandler.generatePkResponse("Invalid order or courier", 
-                                                    HttpStatus.BAD_REQUEST, 
-                                                    null);
-        }
-        
-        OrderDTO updatedOrder = orderService.courierAcceptAssignment(orderId, status);
-        
-        if (true) {
+        try {
+            Long courierId = user.getCourier().getPk();
+            OrderDTO order = orderService.getByPk(orderId);
+            
+            if (order == null || order.getCourier() == null || !order.getCourier().getPk().equals(courierId)) {
+                return ResponseHandler.generatePkResponse("Invalid order or courier", 
+                                                        HttpStatus.BAD_REQUEST, 
+                                                        null);
+            }
+            
+            OrderDTO updatedOrder = orderService.courierAcceptAssignment(orderId, status);
             return ResponseHandler.generatePkResponse("Assignment accepted successfully", 
                                                     HttpStatus.OK, 
                                                     updatedOrder);
-        } else {
+            
+        } catch (Exception e) {
             return ResponseHandler.generatePkResponse("Assignment rejected", 
-                                                    HttpStatus.OK, 
-                                                    updatedOrder);
+                                                    HttpStatus.BAD_REQUEST, 
+                                                    null);
         }
     }
 }

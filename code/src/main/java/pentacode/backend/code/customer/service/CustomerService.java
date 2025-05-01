@@ -40,6 +40,7 @@ public class CustomerService extends BaseService<Customer>{
     public void createOrder(Customer customer) {
         Order order = new Order();
         customer.setOrder(order);
+        order.setCustomer(customer);
         orderRepository.save(order);
         customerRepository.save(customer);
     }
