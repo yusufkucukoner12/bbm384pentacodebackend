@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +39,53 @@ public class MenuService extends BaseService<Menu> {
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
     }
     
-    public List<MenuDTO> getMenuByRestaurant(Long restaurantPk) {
-        return menuMapper.mapToListDTO(menuRepository.findByRestaurantPk(restaurantPk));
+    public List<MenuDTO> getMenuByRestaurant(Long restaurantPk, String searchQuery, String filterCategory, String filterType, String sortOption) {
+        Specification<Menu> spec = Specification.where((root, query, cb) -> 
+            cb.equal(root.get("restaurant").get("pk"), restaurantPk));
+
+        // Search by name or description
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            String searchPattern = "%" + searchQuery.toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> 
+                cb.or(
+                    cb.like(cb.lower(root.get("name")), searchPattern),
+                    cb.like(cb.lower(root.get("description")), searchPattern)
+                ));
+        }
+
+        // Filter by category
+        if (filterCategory != null && !filterCategory.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(cb.lower(root.get("category")), filterCategory.toLowerCase()));
+        }
+
+        // Filter by type (food or drink)
+        if (filterType != null && !filterType.trim().isEmpty()) {
+            boolean isDrink = filterType.equalsIgnoreCase("drink");
+            spec = spec.and((root, query, cb) -> 
+                cb.equal(root.get("isDrink"), isDrink));
+        }
+
+        List<Menu> menus = menuRepository.findAll(spec);
+
+        // Sort
+        menus.sort((a, b) -> {
+            if (sortOption == null) return 0;
+            switch (sortOption) {
+                case "name-asc":
+                    return a.getName().compareTo(b.getName());
+                case "name-desc":
+                    return b.getName().compareTo(a.getName());
+                case "price-asc":
+                    return Double.compare(a.getPrice(), b.getPrice());
+                case "price-desc":
+                    return Double.compare(b.getPrice(), a.getPrice());
+                default:
+                    return 0;
+            }
+        });
+
+        return menuMapper.mapToListDTO(menus);
     }
 
     @Transactional

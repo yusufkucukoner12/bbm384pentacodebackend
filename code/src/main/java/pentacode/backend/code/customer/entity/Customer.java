@@ -34,7 +34,4 @@ public class Customer extends BaseAudityModel{
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orderHistory;
-
-
-
 }
