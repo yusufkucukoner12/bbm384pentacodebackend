@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.OrderItem;
+import pentacode.backend.code.common.entity.OrderStatusEnum;
 import pentacode.backend.code.common.mapper.OrderMapper;
 import pentacode.backend.code.common.repository.OrderItemRepository;
 import pentacode.backend.code.common.repository.OrderRepository;
@@ -117,7 +118,7 @@ public class CustomerService extends BaseService<Customer>{
         if (order.getRestaurant() == null) {
             throw new IllegalArgumentException("Restaurant not assigned to the order.");
         }
-        order.setStatus(Order.OrderStatusEnum.PLACED);
+        order.setStatus(OrderStatusEnum.PLACED);
         orderRepository.save(order);
     }
 }
