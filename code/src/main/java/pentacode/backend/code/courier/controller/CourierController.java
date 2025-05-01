@@ -40,7 +40,7 @@ public class CourierController {
 
     @GetMapping("/status")
     public ResponseEntity<Object> getCourierStatus(@AuthenticationPrincipal User user) {
-        CourierDTO courier = courierService.getByPk(user.getId());
+        CourierDTO courier = courierService.getByPk(user.getCourier().getPk());
         return ResponseHandler.generatePkResponse("Courier status fetched successfully",
                                                  HttpStatus.OK,
                                                  courier);
@@ -50,7 +50,7 @@ public class CourierController {
     public ResponseEntity<Object> updateCourierStatus(
             @RequestBody CourierDTO statusUpdate,
             @AuthenticationPrincipal User user) {
-        CourierDTO updatedCourier = courierService.updateStatus(user.getId(), statusUpdate.isAvailable(), statusUpdate.isOnline());
+        CourierDTO updatedCourier = courierService.updateStatus(user.getCourier().getPk(), statusUpdate.isAvailable(), statusUpdate.isOnline());
         return ResponseHandler.generatePkResponse("Courier status updated successfully",
                                                  HttpStatus.OK,
                                                  updatedCourier);
