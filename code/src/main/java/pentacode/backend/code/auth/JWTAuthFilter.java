@@ -51,6 +51,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+        System.out.println("SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("Request URI: " + request.getRequestURI());
         filterChain.doFilter(request, response);
     }
 }

@@ -26,4 +26,12 @@ public class CourierService extends BaseService<Courier> {
     public CourierDTO getByPk(Long pk) {
         return courierMapper.mapToDTO(super.findByPkOr404(pk));
     }
+    
+    public CourierDTO updateStatus(Long pk, boolean isAvailable, boolean isOnline) {
+        Courier courier = super.findByPkOr404(pk);
+        courier.setAvailable(isAvailable);
+        courier.setOnline(isOnline);
+        courierRepository.save(courier);
+        return courierMapper.mapToDTO(courier);
+    }
 }
