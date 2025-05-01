@@ -7,6 +7,6 @@ import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.restaurant.entity.Menu;
 
 @Service
-public interface BaseRepository<O extends BaseAudityModel> extends JpaRepository<O, Long>, JpaSpecificationExecutor<Menu>{
+public interface BaseRepository<O extends BaseAudityModel> extends JpaRepository<O, Long>, JpaSpecificationExecutor<O>{
     O findByPk(Long pk);
 }
