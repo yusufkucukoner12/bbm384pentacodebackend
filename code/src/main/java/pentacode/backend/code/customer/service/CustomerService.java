@@ -82,13 +82,13 @@ public class CustomerService extends BaseService<Customer>{
         customerRepository.save(customer);
     }
 
+    @Transactional
     public void removeMenuFromOrder(Customer customer, Menu menu) {
         Order order = customer.getOrder();
         List<OrderItem> orderItem = order.getOrderItems();
 
         boolean itemFound = false;
         for (OrderItem item : orderItem) {
-            System.out.println("Item: " + item.getMenu().getPk());
             if (item.getMenu().getPk().equals(menu.getPk())) {
                 if (item.getQuantity() > 1) {
                     item.setQuantity(item.getQuantity() - 1);
