@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import pentacode.backend.code.auth.entity.Role;
 
 @Builder
@@ -32,7 +34,10 @@ public class CreateUserRequest {
     private String restaurantDescription;
 
     private String courierPhoneNumber;
+    @JsonProperty("isAvailable")
     private boolean isAvailable;
+    
+    @JsonProperty("isOnline")
     private boolean isOnline;
 
     private String customerAddress;

@@ -6,6 +6,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +29,11 @@ public class Courier extends BaseAudityModel {
     private String phoneNumber;
     
     @Column(nullable = false)
+    @JsonProperty("isAvailable")
     private boolean isAvailable;
     
     @Column(nullable = false)
+    @JsonProperty("isOnline")
     private boolean isOnline;
     
     @OneToMany(mappedBy = "courier")

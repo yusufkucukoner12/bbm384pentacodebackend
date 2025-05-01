@@ -122,6 +122,8 @@ public class AuthenticationService implements UserDetailsService{
             courier.setName(request.getName());
             courier.setPhoneNumber(request.getCourierPhoneNumber());
             courier.setAvailable(request.isAvailable());
+            System.out.println(request.isOnline());
+            System.out.println(request.isAvailable());
             courier.setOnline(request.isOnline());
             courier.setEmail(request.getEmail());
             courierRepository.save(courier);
