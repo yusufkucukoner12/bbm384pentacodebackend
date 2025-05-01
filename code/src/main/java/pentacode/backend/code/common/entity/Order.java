@@ -2,6 +2,8 @@ package pentacode.backend.code.common.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,7 +59,8 @@ public class Order extends BaseAudityModel {
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     private List<OrderItem> orderItems;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "customer_id") // FK in the orders table
     private Customer customer;
 
