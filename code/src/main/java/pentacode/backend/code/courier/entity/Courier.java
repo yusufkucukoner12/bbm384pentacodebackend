@@ -42,4 +42,6 @@ public class Courier extends BaseAudityModel {
     @Column(nullable = false)
     @Email
     private String email;
+
+    private String profilePictureUrl;
 }

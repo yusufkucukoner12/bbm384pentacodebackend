@@ -15,4 +15,5 @@ public class CourierDTO {
     private String phoneNumber;
     private boolean isAvailable;
     private boolean isOnline;
+    private String profilePictureUrl;
 }

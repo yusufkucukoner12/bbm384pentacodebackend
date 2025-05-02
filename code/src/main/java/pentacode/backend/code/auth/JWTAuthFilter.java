@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         
         System.out.println(authHeader);
         System.out.println(request.getRequestURI());
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
