@@ -32,6 +32,14 @@ public class CreateUserRequest {
     private String restaurantAddress;
     private String restaurantPhoneNumber;
     private String restaurantDescription;
+    private String imageUrl;
+    private String foodType;
+    private String openingHours;
+    private String closingHours;
+    private String deliveryTime;
+    private String deliveryFee;
+    private String minOrderAmount;
+    private String maxOrderAmount;
 
     private String courierPhoneNumber;
     @JsonProperty("isAvailable")

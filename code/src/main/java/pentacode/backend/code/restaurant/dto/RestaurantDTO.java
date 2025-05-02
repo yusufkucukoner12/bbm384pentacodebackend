@@ -20,4 +20,11 @@ public class RestaurantDTO {
     private String phoneNumber;
     private String description;
     private String email;
+    private String foodType;
+    private String openingHours;
+    private String closingHours;
+    private String deliveryTime;
+    private String deliveryFee;
+    private String minOrderAmount;
+    private String maxOrderAmount;
 }

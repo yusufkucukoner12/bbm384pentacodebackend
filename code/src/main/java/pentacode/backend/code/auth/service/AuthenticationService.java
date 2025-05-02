@@ -113,6 +113,14 @@ public class AuthenticationService implements UserDetailsService{
             restaurant.setPhoneNumber(request.getRestaurantPhoneNumber());
             restaurant.setDescription(request.getRestaurantDescription());
             restaurant.setEmail(request.getEmail());
+            restaurant.setFoodType(request.getFoodType());
+            restaurant.setOpeningHours(request.getOpeningHours());
+            restaurant.setClosingHours(request.getClosingHours());
+            restaurant.setDeliveryTime(request.getDeliveryTime());
+            restaurant.setDeliveryFee(request.getDeliveryFee());
+            restaurant.setMinOrderAmount(request.getMinOrderAmount());
+            restaurant.setMaxOrderAmount(request.getMaxOrderAmount());
+            restaurant.setImageUrl(request.getImageUrl());
             restaurantRepository.save(restaurant);
             newUser.setRestaurant(restaurant);
         }

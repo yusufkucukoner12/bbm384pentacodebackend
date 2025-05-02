@@ -46,5 +46,11 @@ public class Restaurant extends BaseAudityModel {
     @Email
     private String email;
 
-
+    private String foodType;
+    private String openingHours;
+    private String closingHours;
+    private String deliveryTime;
+    private String deliveryFee;
+    private String minOrderAmount;
+    private String maxOrderAmount;
 }
