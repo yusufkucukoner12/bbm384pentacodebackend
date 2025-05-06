@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
-import pentacode.backend.code.admin.Admin;
+import pentacode.backend.code.admin.entity.Admin;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Restaurant;
