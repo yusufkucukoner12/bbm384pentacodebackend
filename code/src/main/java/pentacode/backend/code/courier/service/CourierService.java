@@ -46,7 +46,7 @@ public class CourierService extends BaseService<Courier> {
         try {
             String filename = pk + "_" + file.getOriginalFilename();
             String uploadDir = new File("src/main/resources/static/images").getAbsolutePath(); // writable dir in project root
-            System.out.println("Upload directory: " + uploadDir);
+            System.out.println("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEE Upload directory: " + uploadDir);
             File saveFile = new File(uploadDir, filename);
             System.out.println("Saving file to: " + saveFile.getAbsolutePath());
             file.transferTo(saveFile); // saves the file
@@ -61,11 +61,5 @@ public class CourierService extends BaseService<Courier> {
         }
         
     }
-
-    public List<CourierDTO> getAllCouriers() {
-        List<Courier> couriers = courierRepository.findAll();
-        return courierMapper.mapToListDTO(couriers);
-    }
-    
 
 }

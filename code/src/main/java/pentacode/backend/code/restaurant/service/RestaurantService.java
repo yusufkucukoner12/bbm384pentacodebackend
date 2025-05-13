@@ -107,9 +107,4 @@ public class RestaurantService extends BaseService<Restaurant> {
         List<Menu> menus = menuRepository.findByRestaurantPkAndCategoryName(restaurantId, categoryName);
         return menuMapper.mapToListDTO(menus);
     }
-
-    public List<RestaurantDTO> listAllRestaurants() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
-        return restaurantMapper.mapToListDTO(restaurants);
-    }
 }

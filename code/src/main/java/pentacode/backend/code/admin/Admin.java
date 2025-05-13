@@ -1,4 +1,4 @@
-package pentacode.backend.code.admin.entity;
+package pentacode.backend.code.admin;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
