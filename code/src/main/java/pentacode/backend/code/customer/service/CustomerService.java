@@ -2,10 +2,14 @@ package pentacode.backend.code.customer.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import pentacode.backend.code.common.dto.OrderDTO;
+import pentacode.backend.code.customer.dto.CustomerDTO;
+import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.OrderItem;
 import pentacode.backend.code.common.entity.OrderStatusEnum;
@@ -14,6 +18,7 @@ import pentacode.backend.code.common.repository.OrderItemRepository;
 import pentacode.backend.code.common.repository.OrderRepository;
 import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.customer.entity.Customer;
+import pentacode.backend.code.customer.mapper.CustomerMapper;
 import pentacode.backend.code.customer.repository.CustomerRepository;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
@@ -25,16 +30,23 @@ public class CustomerService extends BaseService<Customer>{
     private final CustomerRepository customerRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
+    private final CustomerMapper customerMapper;
     private final RestaurantRepository restaurantRepository;
 
 
-    public CustomerService(OrderRepository orderRepository, CustomerRepository customerRepository, OrderItemRepository orderItemRepository, OrderMapper orderMapper, RestaurantRepository restaurantRepository) {
+    public CustomerService(OrderRepository orderRepository,
+                            CustomerRepository customerRepository,
+                            OrderItemRepository orderItemRepository,
+                            OrderMapper orderMapper,
+                            RestaurantRepository restaurantRepository,
+                            CustomerMapper customerMapper) {
         super(customerRepository);
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderMapper = orderMapper;
         this.restaurantRepository = restaurantRepository;
+        this.customerMapper = customerMapper;
     }
 
     public void createOrder(Customer customer) {
@@ -143,5 +155,9 @@ public class CustomerService extends BaseService<Customer>{
                     .toList();
             return orderMapper.mapToListDTO(orders);
         }
+    }
+    public List<CustomerDTO> listAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customerMapper.mapToListDTO(customers);
     }
 }
