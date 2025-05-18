@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
+                                "/api/auth/admin-login",
                                 "/api/auth/validate-token",
                                 "/images/**"
                         ).permitAll()
@@ -76,7 +77,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/restaurant/get").hasRole("CUSTOMER")
                         .requestMatchers("/api/order/courier/**").hasRole("COURIER")
                         .requestMatchers("/api/restaurant/**").hasAnyRole("RESTAURANT", "CUSTOMER")
-                        .requestMatchers("/auth/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/couriers/available").hasRole("RESTAURANT")
                         .requestMatchers("/api/order/finish-order").hasRole("CUSTOMER")
                         .requestMatchers("/api/restaurant/orders/*/status").hasRole("RESTAURANT")
