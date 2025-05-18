@@ -34,6 +34,10 @@ public class AuthController {
     public ResponseEntity<LoginResponse> generateToken(@Valid @RequestBody LoginRequest authRequest) {
         return new ResponseEntity<>(loginService.login(authRequest), HttpStatus.OK);
     }
+    @PostMapping("/admin-login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest authRequest) {
+        return new ResponseEntity<>(loginService.login(authRequest), HttpStatus.OK);
+    }
     @GetMapping("/validate-token")
     public ResponseEntity<String> validateToken() {
         return new ResponseEntity<>("Token is valid", HttpStatus.OK);
