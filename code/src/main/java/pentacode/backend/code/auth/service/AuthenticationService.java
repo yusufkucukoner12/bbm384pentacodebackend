@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import pentacode.backend.code.admin.entity.Admin;
 import pentacode.backend.code.admin.repository.AdminRepository;
+import pentacode.backend.code.admin.controller.AdminController;
 import pentacode.backend.code.auth.CreateUserRequest;
 import pentacode.backend.code.auth.CreateUserResponse;
 import pentacode.backend.code.auth.LoginRequest;
@@ -150,6 +151,8 @@ public class AuthenticationService implements UserDetailsService{
         else if(role.equals(Role.ROLE_ADMIN)){
             // initialize Admin object
             Admin admin = new Admin();
+            admin.setName(request.getName());
+            admin.setEmail(request.getEmail());
             adminRepository.save(admin);
             newUser.setAdmin(admin);
         }

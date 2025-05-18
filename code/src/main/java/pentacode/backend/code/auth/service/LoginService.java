@@ -45,7 +45,6 @@ public class LoginService {
     try {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
             var user = authenticationService.getByUsername(authRequest.getUsername()).orElseThrow();
             if (user.getAdmin() == null || user.getAdmin().getPk() == null) {
                 throw new AccessDeniedException("You are not authorized to log in as admin.");}
