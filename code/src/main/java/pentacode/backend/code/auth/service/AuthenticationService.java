@@ -71,7 +71,7 @@ public class AuthenticationService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
-        return user.orElseThrow(EntityNotFoundException::new);
+        return user.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
