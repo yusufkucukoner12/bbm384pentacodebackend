@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -43,6 +44,6 @@ public class Customer extends BaseAudityModel{
     }
 
     // one to many relationship with favorite restaurants create the table do not use mapped by
-    @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
-    private List<Restaurant> favoriteRestaurants = new ArrayList<>();
+    @ManyToMany(mappedBy="customers", fetch=FetchType.EAGER)
+    private List<Restaurant> favoriteRestaurants;
 }

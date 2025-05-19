@@ -89,6 +89,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/customer/get-order").hasRole("CUSTOMER")
                         .requestMatchers("/api/order/courier/orders").hasRole("COURIER")
                         .requestMatchers("/api/couriers/**").hasRole("COURIER")
+                        .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
