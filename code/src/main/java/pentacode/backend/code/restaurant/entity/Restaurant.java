@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
+import pentacode.backend.code.customer.entity.Customer;
 
 @Entity
 @Getter
@@ -57,4 +59,9 @@ public class Restaurant extends BaseAudityModel {
 
     private Double rating = 0.0;
     private Integer numberOfRatings = 0;
+
+    // many to one customer, create the table fields
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "pk")
+    private Customer customer;
 }

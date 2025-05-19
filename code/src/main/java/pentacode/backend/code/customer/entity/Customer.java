@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
+import pentacode.backend.code.restaurant.entity.Restaurant;
 
 @Entity
 @Getter
@@ -40,4 +41,8 @@ public class Customer extends BaseAudityModel{
     public void addOrderToHistory(Order order) {
         this.orderHistory.add(order);
     }
+
+    // one to many relationship with favorite restaurants create the table do not use mapped by
+    @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+    private List<Restaurant> favoriteRestaurants = new ArrayList<>();
 }

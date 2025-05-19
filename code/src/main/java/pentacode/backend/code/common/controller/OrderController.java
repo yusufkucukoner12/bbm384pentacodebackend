@@ -74,5 +74,21 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
+
+    @PostMapping("/re-order/{pk}")
+    public ResponseEntity<Object> reOrder(@AuthenticationPrincipal User user, @PathVariable Long pk) {
+        try {
+            Order userOrder = user.getCustomer().getOrder();
+            // now using the pk make it userOrder is same as the order with the pk
+            OrderDTO orderDTO = orderService.reOrder(userOrder, pk);
+            if (orderDTO != null) {
+                return ResponseEntity.ok("Success");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
 }
 

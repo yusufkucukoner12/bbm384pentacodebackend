@@ -62,7 +62,7 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse("Order updated successfully", HttpStatus.OK, "Başarılı");
         }   
         catch (Exception e) {
-            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, "Başarısız");
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }        
     }
 
