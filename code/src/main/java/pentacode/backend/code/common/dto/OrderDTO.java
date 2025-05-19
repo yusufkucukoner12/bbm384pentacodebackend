@@ -26,5 +26,6 @@ public class OrderDTO {
     private Integer version;
     private double totalPrice;
     public List<OrderItemDTO> orderItems;
-    
+    private boolean isRated;
+    private Integer rating;
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,8 +50,11 @@ public class Restaurant extends BaseAudityModel {
     private String foodType;
     private String openingHours;
     private String closingHours;
-    private String deliveryTime;
-    private String deliveryFee;
-    private String minOrderAmount;
-    private String maxOrderAmount;
+    private Integer deliveryTime;
+    private Integer deliveryFee;
+    private Integer minOrderAmount;
+    private Integer maxOrderAmount;
+
+    private Double rating = 0.0;
+    private Integer numberOfRatings = 0;
 }

@@ -223,5 +223,34 @@ public class OrderService extends BaseService<Order> {
         customer.setOrder(order);
         return orderRepository.save(order);
     }
+    @Transactional
+    public OrderDTO rateOrder(Long orderId, Double rating) {
+        // get the restaurant from order
+        Order order = super.findByPkOr404(orderId);
+        if (order == null) {
+            return null;
+        }
+        Restaurant restaurant = order.getRestaurant();
+        if (restaurant == null) {
+            return null;
+        }
+        // get the rating from restaurant
+        Double ratingRestaurant = restaurant.getRating();
+        // set the rating of 
+        System.out.println("RATING: " + rating);
+        System.out.println("RATING RESTAURANT: " + ratingRestaurant);
+
+        restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() + 1);
+        restaurant.setRating((ratingRestaurant + rating)/restaurant.getNumberOfRatings());
+        order.setRating(rating.intValue());
+
+        order.setRated(true);        
+        
+
+        restaurantRepository.save(restaurant);
+
+        // RETURN THE ORDER
+        return orderMapper.mapToDTO(order);
+    }
 
 }

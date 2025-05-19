@@ -55,7 +55,6 @@ public class Order extends BaseAudityModel {
 
     private double totalPrice = 0.0;
 
-
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     private List<OrderItem> orderItems;
 
@@ -64,4 +63,6 @@ public class Order extends BaseAudityModel {
     @JoinColumn(name = "customer_id") // FK in the orders table
     private Customer customer;
 
+    private boolean isRated = false;
+    private Integer rating;
 }

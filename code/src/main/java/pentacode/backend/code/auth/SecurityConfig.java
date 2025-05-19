@@ -68,7 +68,8 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/admin-login",
                                 "/api/auth/validate-token",
-                                "/images/**"
+                                "/images/**",
+                                "/api/order/rate-order/**"
                         ).permitAll()
                         // Allow OPTIONS for all endpoints without authentication
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

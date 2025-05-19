@@ -88,7 +88,7 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse("Order placed successfully", HttpStatus.OK, null);
         }   
         catch (Exception e) {
-            return ResponseHandler.generatePkResponse("Error placing order", HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
     }
 

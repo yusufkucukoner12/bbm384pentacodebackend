@@ -131,6 +131,16 @@ public class CustomerService extends BaseService<Customer>{
         if (order.getRestaurant() == null) {
             throw new IllegalArgumentException("Restaurant not assigned to the order.");
         }
+
+        if(order.getTotalPrice() + order.getRestaurant().getDeliveryFee() < order.getRestaurant().getMinOrderAmount()) {
+            throw new IllegalArgumentException("Minimum order amount not met.");
+        }
+        if(order.getTotalPrice() + order.getRestaurant().getDeliveryFee() > order.getRestaurant().getMaxOrderAmount()) {
+            throw new IllegalArgumentException("Maximum order amount exceeded.");
+        }
+        if (order.getOrderItems().isEmpty()) {
+            throw new IllegalArgumentException("Order is empty.");
+        }
         order.setStatus(OrderStatusEnum.PLACED);
         customer.addOrderToHistory(order);
         System.out.println("Order items: " + order.getOrderItems());

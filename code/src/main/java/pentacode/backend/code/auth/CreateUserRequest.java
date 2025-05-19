@@ -36,10 +36,10 @@ public class CreateUserRequest {
     private String foodType;
     private String openingHours;
     private String closingHours;
-    private String deliveryTime;
-    private String deliveryFee;
-    private String minOrderAmount;
-    private String maxOrderAmount;
+    private Integer deliveryTime;
+    private Integer deliveryFee;
+    private Integer minOrderAmount;
+    private Integer maxOrderAmount;
 
     private String courierPhoneNumber;
     @JsonProperty("isAvailable")
