@@ -160,4 +160,29 @@ public class CustomerService extends BaseService<Customer>{
         List<Customer> customers = customerRepository.findAll();
         return customerMapper.mapToListDTO(customers);
     }
+    public CustomerDTO getCustomerProfile(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found");
+        }
+        return customerMapper.mapToDTO(customer);
+    }
+
+    @Transactional
+    public CustomerDTO updateCustomerProfile(Customer customer, CustomerDTO dto) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found");
+        }
+
+        // Update customer fields
+        customer.setName(dto.getName());
+        customer.setAddress(dto.getAddress());
+        customer.setPhoneNumber(dto.getPhoneNumber());
+        customer.setEmail(dto.getEmail());
+        customer.setLatitude(dto.getLatitude());
+        customer.setLongitude(dto.getLongitude());
+
+        // Persist and return DTO
+        Customer saved = customerRepository.save(customer);
+        return customerMapper.mapToDTO(saved);
+    }
 }

@@ -1,5 +1,7 @@
 package pentacode.backend.code.restaurant.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
@@ -97,6 +100,48 @@ public class RestaurantService extends BaseService<Restaurant> {
             );
             return restaurantMapper.mapToListDTO(restaurants);
         }
+    }
+    public RestaurantDTO updateProfilePicture(Long pk, MultipartFile file) {
+        Restaurant restaurant = findByPkOr404(pk);
+
+        try {
+            String filename = pk + "_" + file.getOriginalFilename();
+            String uploadDir = new File("src/main/resources/static/images").getAbsolutePath(); // writable dir in project root
+            File saveFile = new File(uploadDir, filename);
+            file.transferTo(saveFile); // saves the file
+
+            // Expose file via URL
+            String profilePictureUrl = "http://localhost:8080/images/" + filename;
+            restaurant.setImageUrl(profilePictureUrl);
+            restaurantRepository.save(restaurant);
+            return restaurantMapper.mapToDTO(restaurant);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save file", e);
+        }
+    }
+    public RestaurantDTO updateRestaurant(Long pk, RestaurantDTO dto) {
+        // 1. Fetch the entity or fail with 404 (BaseService already has this helper)
+        Restaurant entity = findByPkOr404(pk);
+
+        entity.setName(          dto.getName()          );
+        entity.setImageUrl(      dto.getImageUrl()      );
+        entity.setAddress(       dto.getAddress()       );
+        entity.setPhoneNumber(   dto.getPhoneNumber()   );
+        entity.setDescription(   dto.getDescription()   );
+        entity.setEmail(         dto.getEmail()         );
+        entity.setFoodType(      dto.getFoodType()      );
+        entity.setOpeningHours(  dto.getOpeningHours()  );
+        entity.setClosingHours(  dto.getClosingHours()  );
+        entity.setDeliveryTime(  dto.getDeliveryTime()  );
+        entity.setDeliveryFee(   dto.getDeliveryFee()   );
+        entity.setMinOrderAmount(dto.getMinOrderAmount());
+        entity.setMaxOrderAmount(dto.getMaxOrderAmount());
+        entity.setLatitude(      dto.getLatitude()      );
+        entity.setLongitude(    dto.getLongitude()      );
+
+        //  Persist and return DTO
+        Restaurant saved = restaurantRepository.save(entity);
+        return restaurantMapper.mapToDTO(saved);
     }
 
     public List<OrderDTO> getOrdersByRestaurant(Long restaurantId) {

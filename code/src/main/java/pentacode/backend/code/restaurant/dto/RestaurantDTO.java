@@ -27,4 +27,6 @@ public class RestaurantDTO {
     private String deliveryFee;
     private String minOrderAmount;
     private String maxOrderAmount;
+    private float longitude;
+    private float latitude;
 }

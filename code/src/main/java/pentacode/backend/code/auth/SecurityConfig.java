@@ -76,7 +76,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/restaurant/all").hasRole("CUSTOMER")
                         .requestMatchers("/api/restaurant/get").hasRole("CUSTOMER")
                         .requestMatchers("/api/order/courier/**").hasRole("COURIER")
-                        .requestMatchers("/api/restaurant/**").hasAnyRole("RESTAURANT", "CUSTOMER")
+                        // TODO: UPDATING THE RESTAURANT SHOULDNT BE ALLOWED BY CUSTOMER
+                        .requestMatchers("/api/restaurant/**").hasAnyRole("RESTAURANT", "CUSTOMER") 
                         .requestMatchers("/api/auth/admin").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/couriers/available").hasRole("RESTAURANT")

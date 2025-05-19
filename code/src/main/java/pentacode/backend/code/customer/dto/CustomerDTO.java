@@ -13,6 +13,8 @@ import pentacode.backend.code.common.entity.Order;
 public class CustomerDTO {
     public String name;
     public String address;
+    private float longitude;
+    private float latitude;
     public String phoneNumber;
     public String email;
     public Order order;

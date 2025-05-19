@@ -53,4 +53,6 @@ public class Restaurant extends BaseAudityModel {
     private String deliveryFee;
     private String minOrderAmount;
     private String maxOrderAmount;
+    private float longitude;
+    private float latitude;
 }
