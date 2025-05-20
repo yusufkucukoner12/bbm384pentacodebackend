@@ -101,6 +101,7 @@ public class AuthenticationService implements UserDetailsService{
                 .credentialsNonExpired(true)
                 .isEnabled(true)
                 .accountNonLocked(true)
+                .isBanned(false)
                 .build();
 
         Role role = roles.stream().findFirst().orElse(null);
@@ -198,4 +199,17 @@ public class AuthenticationService implements UserDetailsService{
     public Optional<User> getByUsernameAndOptionalToken(String username, Set<Role> roles) {
         return userRepository.findByUsernameAndAuthorities(username, roles);
     }
+    public Optional<User> banUser(Long UserId) {
+        User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setBanned(true);
+        userRepository.save(user);
+        return userRepository.findById(UserId);
+    }
+    public Optional<User> unbanUser(Long UserId) {
+        User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setBanned(false);
+        userRepository.save(user);
+        return userRepository.findById(UserId);
+    }
+    
 }

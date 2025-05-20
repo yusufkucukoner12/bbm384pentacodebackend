@@ -22,6 +22,7 @@ import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.customer.service.CustomerService;
+import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.service.MenuService;
 
@@ -64,7 +65,7 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse("Order updated successfully", HttpStatus.OK, "Başarılı");
         }   
         catch (Exception e) {
-            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, "Başarısız");
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }        
     }
 
@@ -90,7 +91,7 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse("Order placed successfully", HttpStatus.OK, null);
         }   
         catch (Exception e) {
-            return ResponseHandler.generatePkResponse("Error placing order", HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
     }
 
@@ -133,5 +134,55 @@ public class CustomerController {
         } catch (Exception e) {
             return ResponseHandler.generatePkResponse("Error updating customer profile", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
+    }
+
+    @PostMapping("/add-to-favorite/{pk}")
+    public ResponseEntity<Object> addToFavorite(@AuthenticationPrincipal User user, @PathVariable Long pk) {
+        // add restaurant to favorite
+        System.out.println("ANANIN AMINA KOYAIYM");
+        try {
+            Customer customer = user.getCustomer();
+            customerService.addToFavorite(customer, pk);
+            return ResponseHandler.generatePkResponse("Restaurant added to favorites successfully", HttpStatus.OK, null);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error adding restaurant to favorites", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }      
+    }
+
+    @PostMapping("/remove-from-favorite/{pk}")
+    public ResponseEntity<Object> removeFromFavorite(@AuthenticationPrincipal User user, @PathVariable Long pk) {
+        try {
+            Customer customer = user.getCustomer();
+            customerService.removeFromFavorite(customer, pk);
+            return ResponseHandler.generatePkResponse("Restaurant removed from favorites successfully", HttpStatus.OK, null);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error removing restaurant from favorites", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
+
+    @GetMapping("/is-favorite/{pk}")
+    public ResponseEntity<Object> isFavorite(@AuthenticationPrincipal User user, @PathVariable Long pk) {
+        try {
+            Customer customer = user.getCustomer();
+            boolean isFavorite = customerService.isFavorite(customer, pk);
+            return ResponseHandler.generatePkResponse("Restaurant is favorite", HttpStatus.OK, isFavorite);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error checking if restaurant is favorite", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
+
+    @GetMapping("/get-favorite-restaurants")
+    public ResponseEntity<Object> getFavoriteRestaurants(@AuthenticationPrincipal User user) {
+        try {
+            Customer customer = user.getCustomer();
+            List<RestaurantDTO> favoriteRestaurants = customerService.getFavoriteRestaurants(customer);
+            return ResponseHandler.generatePkResponse("Favorite restaurants retrieved successfully", HttpStatus.OK, favoriteRestaurants);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving favorite restaurants", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
     }
 }

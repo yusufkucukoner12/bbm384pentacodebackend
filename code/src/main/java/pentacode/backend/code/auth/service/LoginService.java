@@ -37,6 +37,9 @@ public class LoginService {
             authenticationService.allTokenExpired(user);
             authenticationService.saveToken(user, stringToken);
             user.setToken(stringToken);
+            if (user.isBanned()) {
+                throw new RuntimeException("This user is banned");
+            }
             return LoginResponse.builder().user(user).build();
         }
         throw new UsernameNotFoundException("invalid username {}" + authRequest.getUsername());
