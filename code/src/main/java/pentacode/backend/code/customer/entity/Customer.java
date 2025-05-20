@@ -3,6 +3,8 @@ package pentacode.backend.code.customer.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -15,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.restaurant.entity.Restaurant;
@@ -46,4 +49,8 @@ public class Customer extends BaseAudityModel{
     // one to many relationship with favorite restaurants create the table do not use mapped by
     @ManyToMany(mappedBy="customers", fetch=FetchType.EAGER)
     private List<Restaurant> favoriteRestaurants;
+
+    @OneToOne(mappedBy = "customer")
+    @JsonIgnore
+    private User user;
 }

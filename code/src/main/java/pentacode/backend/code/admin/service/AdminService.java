@@ -1,8 +1,12 @@
 package pentacode.backend.code.admin.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import pentacode.backend.code.auth.entity.User;
+import pentacode.backend.code.auth.service.AuthenticationService;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.courier.dto.CourierDTO;
@@ -18,15 +22,18 @@ public class AdminService {
     private final CourierService courierService;
     private final RestaurantService restaurantService;
     private final CustomerService customerService;
+    private final AuthenticationService authenticationService;
 
     public AdminService(OrderService orderService,
                         CourierService courierService,
                         RestaurantService restaurantService,
-                        CustomerService customerService) {
+                        CustomerService customerService,
+                        AuthenticationService authenticationService) {
         this.customerService = customerService;
         this.orderService = orderService;
         this.courierService = courierService;
         this.restaurantService = restaurantService;
+        this.authenticationService = authenticationService;
     }
 
     public OrderDTO assignCourier(Long orderId, Long courierId) {
@@ -51,5 +58,11 @@ public class AdminService {
 
     public List<CustomerDTO> getAllCustomers() {
         return customerService.listAllCustomers();
+    }
+    public Optional<User> banUser(Long userId) {
+        return authenticationService.banUser(userId);
+    }
+    public Optional<User> unbanUser(Long userId) {
+        return authenticationService.unbanUser(userId);
     }
 }

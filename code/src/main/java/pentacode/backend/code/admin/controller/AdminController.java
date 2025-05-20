@@ -2,6 +2,7 @@ package pentacode.backend.code.admin.controller;
 
 import java.util.*;
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.restaurant.service.RestaurantService;
 import pentacode.backend.code.courier.service.CourierService;
 import pentacode.backend.code.customer.service.CustomerService;
+import pentacode.backend.code.admin.service.AdminService;
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
 
@@ -22,12 +25,15 @@ public class AdminController {
     private final CourierService courierService;
     private final RestaurantService restaurantService;
     private final CustomerService customerService;
+    private final AdminService adminService;
 
     
     public AdminController(OrderService orderService,
                            CourierService courierService,
                            RestaurantService restaurantService,
-                           CustomerService customerService) {
+                           CustomerService customerService,
+                           AdminService adminService) {
+        this.adminService = adminService;
         this.orderService = orderService;
         this.courierService = courierService;
         this.restaurantService = restaurantService;
@@ -83,7 +89,22 @@ public class AdminController {
     public ResponseEntity<Object> listAllCustomers() {
         List<CustomerDTO> customers = customerService.listAllCustomers();
         return ResponseHandler.generatePkResponse("Fetched customers", HttpStatus.OK, customers);
-}
+    }
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<Object> getCustomerById(@PathVariable Long customerId) {
+            CustomerDTO customer = customerService.getCustomerById(customerId);
+            return ResponseHandler.generatePkResponse("Fetched the customer", HttpStatus.OK, customer);
+    }
+    @PutMapping("/ban/{userId}")
+        public ResponseEntity<Object> banUser(@PathVariable Long userId) {
+            Optional<User> user = adminService.banUser(userId);
+            return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
+        }
 
+    @PutMapping("/unban/{userId}")
+    public ResponseEntity<Object> unbanUser(@PathVariable Long userId) {
+        Optional<User> user = adminService.unbanUser(userId);
+        return ResponseHandler.generatePkResponse("User unbanned", HttpStatus.OK, user);
+    }
 
 }

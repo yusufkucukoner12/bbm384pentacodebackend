@@ -2,6 +2,8 @@ package pentacode.backend.code.customer.dto;
 
 import java.util.*;
 
+import org.springframework.security.access.method.P;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import pentacode.backend.code.common.entity.Order;
 @Setter
 @Builder
 public class CustomerDTO {
+    private Long userId;
     public String name;
     public String address;
     public String phoneNumber;

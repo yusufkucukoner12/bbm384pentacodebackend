@@ -46,6 +46,8 @@ public class User implements UserDetails {
     private boolean isEnabled;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
+    @JsonProperty("is_banned")
+    private boolean isBanned;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))

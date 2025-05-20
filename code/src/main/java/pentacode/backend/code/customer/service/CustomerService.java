@@ -228,6 +228,9 @@ public class CustomerService extends BaseService<Customer>{
 
         return restaurantMapper.mapToDTO(restaurant);
     }
-
-
+    public CustomerDTO getCustomerById(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        return customerMapper.mapToDTO(customer);
+    }
 }
