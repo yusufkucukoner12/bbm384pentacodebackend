@@ -96,15 +96,19 @@ public class AdminController {
             return ResponseHandler.generatePkResponse("Fetched the customer", HttpStatus.OK, customer);
     }
     @PutMapping("/ban/{userId}")
-        public ResponseEntity<Object> banUser(@PathVariable Long userId) {
-            Optional<User> user = adminService.banUser(userId);
-            return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
-        }
+    public ResponseEntity<Object> banUser(@PathVariable Long userId) {
+        Optional<User> user = adminService.banUser(userId);
+        return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
+    }
 
     @PutMapping("/unban/{userId}")
     public ResponseEntity<Object> unbanUser(@PathVariable Long userId) {
         Optional<User> user = adminService.unbanUser(userId);
         return ResponseHandler.generatePkResponse("User unbanned", HttpStatus.OK, user);
     }
-
+    @GetMapping("/getban/{userId}")
+    public ResponseEntity<Object> getUserBanStatus(@PathVariable Long userId) {
+        Boolean isBanned = adminService.getUserBanStatus(userId);
+        return ResponseHandler.generatePkResponse("User ban status retrieved" , HttpStatus.OK , isBanned);
+    }
 }
