@@ -32,6 +32,8 @@ public class Customer extends BaseAudityModel{
     private String phoneNumber;
     private String name;
 
+    private float longitude;
+    private float latitude;
     @Email
     private String email;
 

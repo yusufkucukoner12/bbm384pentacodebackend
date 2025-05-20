@@ -68,4 +68,6 @@ public class Restaurant extends BaseAudityModel {
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id"))
     private List<Customer> customers;
+    private float longitude;
+    private float latitude;
 }

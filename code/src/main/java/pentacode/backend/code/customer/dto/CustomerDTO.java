@@ -16,6 +16,8 @@ public class CustomerDTO {
     private Long userId;
     public String name;
     public String address;
+    private float longitude;
+    private float latitude;
     public String phoneNumber;
     public String email;
     public Order order;

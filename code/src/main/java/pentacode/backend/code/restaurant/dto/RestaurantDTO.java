@@ -29,4 +29,6 @@ public class RestaurantDTO {
     private Integer maxOrderAmount;
     private Double rating;
     private Integer numberOfRatings;
+    private float longitude;
+    private float latitude;
 }

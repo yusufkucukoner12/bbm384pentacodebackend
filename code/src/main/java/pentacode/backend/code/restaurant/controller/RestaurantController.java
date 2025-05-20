@@ -8,10 +8,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import pentacode.backend.code.auth.entity.User;
@@ -20,6 +22,7 @@ import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.restaurant.dto.MenuDTO;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
+import pentacode.backend.code.restaurant.mapper.RestaurantMapper;
 import pentacode.backend.code.restaurant.service.RestaurantService;
 import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
 
@@ -29,13 +32,49 @@ import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
 public class RestaurantController {
     private final RestaurantService restaurantService;
     private final OrderService orderService;
+    private final RestaurantMapper restaurantMapper;
 
     @GetMapping("{pk}")
     public ResponseEntity<Object> getRestByPk(@AuthenticationPrincipal User user, @PathVariable Long pk) {
         // Long pk = user.getRestaurant().getPk();
         return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, restaurantService.getByPk(pk));
     }
+    @GetMapping("/profile")
+    public ResponseEntity<Object> getRestaurantProfile(@AuthenticationPrincipal User user) {
+        RestaurantDTO restaurantDTO = restaurantMapper.mapToDTO(user.getRestaurant());
+        if (restaurantDTO == null) {
+            return ResponseHandler.generatePkResponse("Restaurant not found", HttpStatus.NOT_FOUND, null);
+        }
+        return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, restaurantDTO);
+    }   
+    @PostMapping("/profile-picture")
+    public ResponseEntity<Object> uploadProfilePicture(
+            @AuthenticationPrincipal User user,
+            @RequestParam("file") MultipartFile file) {
+        Long restaurantPk = user.getRestaurant().getPk();
+        RestaurantDTO updatedRestaurant = restaurantService.updateProfilePicture(restaurantPk, file);
+        return ResponseHandler.generatePkResponse("Profile picture updated successfully", HttpStatus.OK, updatedRestaurant);
+    }
+    public String postMethodName(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
+    @PutMapping("/profile")
+    public ResponseEntity<Object> updateRestaurantProfile(
+            @AuthenticationPrincipal User user,
+            @RequestBody RestaurantDTO request) {
 
+        Long restaurantPk = user.getRestaurant().getPk();          // derive pk from JWT principal
+        RestaurantDTO updated =
+                restaurantService.updateRestaurant(restaurantPk, request);
+
+        return ResponseHandler.generatePkResponse(
+                "Profile updated successfully",
+                HttpStatus.OK,
+                updated);
+    }
     @GetMapping("name/{name}")
     public ResponseEntity<Object> getRestaurantByName(@PathVariable String name) {
         List<RestaurantDTO> restaurantDTOs = restaurantService.getRestaurantByName(name);

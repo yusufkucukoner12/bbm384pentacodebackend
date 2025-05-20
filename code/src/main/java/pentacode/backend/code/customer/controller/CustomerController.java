@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
+import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.customer.service.CustomerService;
 import pentacode.backend.code.restaurant.dto.RestaurantDTO;
@@ -103,6 +105,35 @@ public class CustomerController {
         catch (Exception e) {
             return ResponseHandler.generatePkResponse("Error retrieving active orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<Object> getCustomerProfile(@AuthenticationPrincipal User user) {
+        try {
+            Customer customer = user.getCustomer();
+            if (customer == null) {
+                return ResponseHandler.generatePkResponse("Customer not found", HttpStatus.NOT_FOUND, null);
+            }
+            CustomerDTO customerDTO = customerService.getCustomerProfile(customer);
+            return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, customerDTO);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving customer profile", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Object> updateCustomerProfile(
+            @AuthenticationPrincipal User user,
+            @RequestBody CustomerDTO request) {
+        try {
+            Customer customer = user.getCustomer();
+            if (customer == null) {
+                return ResponseHandler.generatePkResponse("Customer not found", HttpStatus.NOT_FOUND, null);
+            }
+            CustomerDTO updated = customerService.updateCustomerProfile(customer, request);
+            return ResponseHandler.generatePkResponse("Profile updated successfully", HttpStatus.OK, updated);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error updating customer profile", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
     }
 
     @PostMapping("/add-to-favorite/{pk}")
