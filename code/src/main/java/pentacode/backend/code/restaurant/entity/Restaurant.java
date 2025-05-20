@@ -1,5 +1,6 @@
 package pentacode.backend.code.restaurant.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
@@ -70,4 +72,7 @@ public class Restaurant extends BaseAudityModel {
     private List<Customer> customers;
     private float longitude;
     private float latitude;
+
+    @OneToMany(mappedBy = "restaurant", fetch=FetchType.EAGER)
+    private List<Review> reviews = new ArrayList<>();
 }

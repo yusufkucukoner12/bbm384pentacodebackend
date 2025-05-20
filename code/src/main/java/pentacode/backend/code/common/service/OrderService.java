@@ -22,6 +22,7 @@ import pentacode.backend.code.courier.repository.CourierRepository;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
+import pentacode.backend.code.restaurant.entity.Review;
 import pentacode.backend.code.restaurant.repository.MenuRepository;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
@@ -225,7 +226,7 @@ public class OrderService extends BaseService<Order> {
         return orderRepository.save(order);
     }
     @Transactional
-    public OrderDTO rateOrder(Long orderId, Double rating) {
+    public OrderDTO rateOrder(Long orderId, Double rating, Customer customer) {
         // get the restaurant from order
         Order order = super.findByPkOr404(orderId);
         if (order == null) {
@@ -244,6 +245,23 @@ public class OrderService extends BaseService<Order> {
         restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() + 1);
         restaurant.setRating((ratingRestaurant + rating)/restaurant.getNumberOfRatings());
         order.setRating(rating.intValue());
+
+        Review review = new Review();
+        review.setRating(rating.intValue());
+        review.setRestaurant(restaurant);
+        review.setOrder(order);
+        review.setCustomer(customer);
+
+        if (restaurant.getReviews() == null) {
+            restaurant.setReviews(new ArrayList<>());
+        }
+        if (customer.getReviews() == null) {
+            customer.setReviews(new ArrayList<>());
+        }
+
+        restaurant.getReviews().add(review);
+        order.setReviews(review);
+        customer.getReviews().add(review);
 
         order.setRated(true);        
         

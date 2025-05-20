@@ -21,6 +21,7 @@ import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.service.OrderService;
 import pentacode.backend.code.common.utils.ResponseHandler;
+import pentacode.backend.code.customer.entity.Customer;
 
 @RestController
 @RequestMapping("/api/order")
@@ -65,10 +66,10 @@ public class OrderController {
     }
 
     @PostMapping("/rate-order/{pk}")
-    public ResponseEntity<Object> rateOrder(@PathVariable Long pk, @RequestParam("rating") Double rating) {
-        System.out.println("ANANIZIN AMIII YAA");
+    public ResponseEntity<Object> rateOrder(@AuthenticationPrincipal User user, @PathVariable Long pk, @RequestParam("rating") Double rating) {
         try {
-            OrderDTO orderDTO = orderService.rateOrder(pk, rating);
+            Customer customer = user.getCustomer();
+            OrderDTO orderDTO = orderService.rateOrder(pk, rating, customer);
             return ResponseEntity.ok("Success");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
@@ -79,7 +80,6 @@ public class OrderController {
     public ResponseEntity<Object> reOrder(@AuthenticationPrincipal User user, @PathVariable Long pk) {
         try {
             Order userOrder = user.getCustomer().getOrder();
-            // now using the pk make it userOrder is same as the order with the pk
             OrderDTO orderDTO = orderService.reOrder(userOrder, pk);
             if (orderDTO != null) {
                 return ResponseEntity.ok("Success");

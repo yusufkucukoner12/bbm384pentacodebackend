@@ -138,8 +138,6 @@ public class CustomerController {
 
     @PostMapping("/add-to-favorite/{pk}")
     public ResponseEntity<Object> addToFavorite(@AuthenticationPrincipal User user, @PathVariable Long pk) {
-        // add restaurant to favorite
-        System.out.println("ANANIN AMINA KOYAIYM");
         try {
             Customer customer = user.getCustomer();
             customerService.addToFavorite(customer, pk);

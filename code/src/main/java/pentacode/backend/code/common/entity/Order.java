@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
+import pentacode.backend.code.restaurant.entity.Review;
 
 @Entity
 @Getter
@@ -65,4 +67,7 @@ public class Order extends BaseAudityModel {
 
     private boolean isRated = false;
     private Integer rating;
+
+    @OneToOne(mappedBy = "order", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    private Review reviews;
 }

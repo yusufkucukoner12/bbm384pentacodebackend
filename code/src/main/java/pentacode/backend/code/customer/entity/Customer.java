@@ -21,6 +21,7 @@ import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.restaurant.entity.Restaurant;
+import pentacode.backend.code.restaurant.entity.Review;
 
 @Entity
 @Getter
@@ -55,4 +56,7 @@ public class Customer extends BaseAudityModel{
     @OneToOne(mappedBy = "customer")
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+    private List<Review> reviews = new ArrayList<>();
 }
