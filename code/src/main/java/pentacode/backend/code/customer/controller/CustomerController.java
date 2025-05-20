@@ -183,4 +183,52 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse("Error retrieving favorite restaurants", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
     }
+
+    @PostMapping("/add-to-favorite-orders/{orderId}")
+    public ResponseEntity<Object> addToFavoriteOrders(@AuthenticationPrincipal User user, @PathVariable Long orderId) {
+        try {
+            Customer customer = user.getCustomer();
+            OrderDTO order = customerService.addToFavoriteOrders(customer, orderId);
+            return ResponseHandler.generatePkResponse("Order added to favorites successfully", HttpStatus.OK, order);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
+
+    @PostMapping("/remove-from-favorite-orders/{orderId}")
+    public ResponseEntity<Object> removeFromFavoriteOrders(@AuthenticationPrincipal User user, @PathVariable Long orderId) {
+        try {
+            Customer customer = user.getCustomer();
+            OrderDTO order = customerService.removeFromFavoriteOrders(customer, orderId);
+            return ResponseHandler.generatePkResponse("Order removed from favorites successfully", HttpStatus.OK, order);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
+
+    @GetMapping("/get-favorite-orders")
+    public ResponseEntity<Object> getFavoriteOrders(@AuthenticationPrincipal User user) {
+        try {
+            Customer customer = user.getCustomer();
+            List<OrderDTO> favoriteOrders = customerService.getFavoriteOrders(customer);
+            return ResponseHandler.generatePkResponse("Favorite orders retrieved successfully", HttpStatus.OK, favoriteOrders);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving favorite orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
+
+    @GetMapping("/is-favorite-order/{orderId}")
+    public ResponseEntity<Object> isFavoriteOrder(@AuthenticationPrincipal User user, @PathVariable Long orderId) {
+        try {
+            Customer customer = user.getCustomer();
+            boolean isFavorite = customerService.isFavoriteOrder(customer, orderId);
+            return ResponseHandler.generatePkResponse("Order favorite status retrieved", HttpStatus.OK, isFavorite);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
 }

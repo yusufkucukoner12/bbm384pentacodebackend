@@ -175,9 +175,17 @@ public class CustomerService extends BaseService<Customer>{
         List<Customer> customers = customerRepository.findAll();
         return customerMapper.mapToListDTO(customers);
     }
+    @Transactional(readOnly = true)
     public CustomerDTO getCustomerProfile(Customer customer) {
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found");
+        }
+        // Force initialization of lazy collections within transaction
+        if (customer.getOrderHistory() != null) {
+            customer.getOrderHistory().size();
+        }
+        if (customer.getOrder() != null) {
+            customer.getOrder().getOrderItems().size();
         }
         return customerMapper.mapToDTO(customer);
     }
@@ -257,5 +265,52 @@ public class CustomerService extends BaseService<Customer>{
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
         return customerMapper.mapToDTO(customer);
+    }
+
+    @Transactional
+    public OrderDTO addToFavoriteOrders(Customer customer, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        if (!order.getCustomer().getPk().equals(customer.getPk())) {
+            throw new IllegalArgumentException("Order does not belong to this customer");
+        }
+
+        if (customer.getFavoriteOrders() == null) {
+            customer.setFavoriteOrders(new ArrayList<>());
+        }
+
+        if (!customer.getFavoriteOrders().contains(order)) {
+            customer.getFavoriteOrders().add(order);
+            customerRepository.save(customer);
+        }
+
+        return orderMapper.mapToDTO(order);
+    }
+
+    @Transactional
+    public OrderDTO removeFromFavoriteOrders(Customer customer, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (customer.getFavoriteOrders() != null) {
+            customer.getFavoriteOrders().remove(order);
+            customerRepository.save(customer);
+        }
+
+        return orderMapper.mapToDTO(order);
+    }
+
+    public List<OrderDTO> getFavoriteOrders(Customer customer) {
+        if (customer.getFavoriteOrders() == null) {
+            return new ArrayList<>();
+        }
+        return orderMapper.mapToListDTO(customer.getFavoriteOrders());
+    }
+
+    public boolean isFavoriteOrder(Customer customer, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        return customer.getFavoriteOrders() != null && customer.getFavoriteOrders().contains(order);
     }
 }

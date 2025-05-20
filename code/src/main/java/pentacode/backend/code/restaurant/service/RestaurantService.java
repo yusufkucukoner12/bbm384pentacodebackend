@@ -2,6 +2,8 @@ package pentacode.backend.code.restaurant.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +37,8 @@ public class RestaurantService extends BaseService<Restaurant> {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
     
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    
     public RestaurantService(
             RestaurantMapper restaurantMapper,
             @Qualifier("restaurantRepository") RestaurantRepository restaurantRepository,
@@ -49,6 +53,44 @@ public class RestaurantService extends BaseService<Restaurant> {
         this.orderMapper = orderMapper;
         this.menuRepository = menuRepository;
         this.menuMapper = menuMapper;
+    }
+
+    private boolean isRestaurantOpen(Restaurant restaurant) {
+        // add log for the restaurant
+        // System.out.println("Restaurant: " + restaurant.getName());
+        // System.out.println("Opening Hours: " + restaurant.getOpeningHours());
+        // System.out.println("Closing Hours: " + restaurant.getClosingHours());
+        if (restaurant.getOpeningHours() == null || restaurant.getClosingHours() == null) {
+            return false;
+        }
+
+        try {
+            LocalTime currentTime = LocalTime.now();
+            
+            // Format single-digit hours to two digits
+            String formattedOpeningHours = restaurant.getOpeningHours().replaceAll("^(\\d):", "0$1:");
+            String formattedClosingHours = restaurant.getClosingHours().replaceAll("^(\\d):", "0$1:");
+            // System.out.println("Formatted Opening Hours: " + formattedOpeningHours);
+            // System.out.println("Formatted Closing Hours: " + formattedClosingHours);
+            LocalTime openingTime = LocalTime.parse(formattedOpeningHours, TIME_FORMATTER);
+            LocalTime closingTime = LocalTime.parse(formattedClosingHours, TIME_FORMATTER);
+
+            // Handle case where restaurant is open past midnight
+            if (closingTime.isBefore(openingTime)) {
+                // System.out.println("Restaurant is open past midnight");
+                return !currentTime.isBefore(openingTime) || !currentTime.isAfter(closingTime);
+            }
+            // current time
+            // System.out.println("Current Time: " + currentTime);
+            boolean isOpen = !currentTime.isBefore(openingTime) && !currentTime.isAfter(closingTime);
+            // System.out.println("Restaurant is open: " + isOpen);
+            return !currentTime.isBefore(openingTime) && !currentTime.isAfter(closingTime);
+        } catch (Exception e) {
+            // System.out.println("Error parsing time for restaurant: " + restaurant.getName() + 
+                            //  " Opening: " + restaurant.getOpeningHours() + 
+                            //  " Closing: " + restaurant.getClosingHours());
+            return false;
+        }
     }
 
     public RestaurantDTO getByPk(Long pk) {
@@ -82,6 +124,11 @@ public class RestaurantService extends BaseService<Restaurant> {
 
             List<Restaurant> restaurants = restaurantRepository.findAll(spec);
 
+            // Filter open restaurants
+            restaurants = restaurants.stream()
+                .filter(this::isRestaurantOpen)
+                .collect(Collectors.toList());
+
             // Sort in Java
             restaurants.sort((a, b) -> {
                 if (sortOption == null || sortOption.equals("name-asc")) {
@@ -99,9 +146,16 @@ public class RestaurantService extends BaseService<Restaurant> {
                 searchQuery != null && !searchQuery.trim().isEmpty() ? searchQuery : null,
                 sortOption != null ? sortOption : "name-asc"
             );
+            
+            // Filter open restaurants
+            restaurants = restaurants.stream()
+                .filter(this::isRestaurantOpen)
+                .collect(Collectors.toList());
+                
             return restaurantMapper.mapToListDTO(restaurants);
         }
     }
+
     public RestaurantDTO updateProfilePicture(Long pk, MultipartFile file) {
         Restaurant restaurant = findByPkOr404(pk);
 
@@ -120,6 +174,7 @@ public class RestaurantService extends BaseService<Restaurant> {
             throw new RuntimeException("Failed to save file", e);
         }
     }
+
     public RestaurantDTO updateRestaurant(Long pk, RestaurantDTO dto) {
         // 1. Fetch the entity or fail with 404 (BaseService already has this helper)
         Restaurant entity = findByPkOr404(pk);

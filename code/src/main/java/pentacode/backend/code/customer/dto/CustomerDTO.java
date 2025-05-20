@@ -7,7 +7,7 @@ import org.springframework.security.access.method.P;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.dto.OrderDTO;
 
 @Getter
 @Setter
@@ -20,6 +20,7 @@ public class CustomerDTO {
     private float latitude;
     public String phoneNumber;
     public String email;
-    public Order order;
-    public List<Order> orderHistory;
+    public OrderDTO order;
+    public List<OrderDTO> orderHistory;
+    public List<OrderDTO> favoriteOrders;
 }

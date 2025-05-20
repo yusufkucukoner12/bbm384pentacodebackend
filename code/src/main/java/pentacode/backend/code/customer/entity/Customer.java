@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -52,6 +53,14 @@ public class Customer extends BaseAudityModel{
     // one to many relationship with favorite restaurants create the table do not use mapped by
     @ManyToMany(mappedBy="customers", fetch=FetchType.EAGER)
     private List<Restaurant> favoriteRestaurants;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+        name = "customer_favorite_orders",
+        joinColumns = @JoinColumn(name = "customer_id"),
+        inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private List<Order> favoriteOrders = new ArrayList<>();
 
     @OneToOne(mappedBy = "customer")
     @JsonIgnore
