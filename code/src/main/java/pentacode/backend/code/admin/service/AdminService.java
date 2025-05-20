@@ -65,4 +65,7 @@ public class AdminService {
     public Optional<User> unbanUser(Long userId) {
         return authenticationService.unbanUser(userId);
     }
+    public Boolean getUserBanStatus(Long userId){
+        return authenticationService.getUserBanStatus(userId);
+    }
 }
