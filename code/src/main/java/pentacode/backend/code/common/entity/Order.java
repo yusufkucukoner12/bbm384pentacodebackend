@@ -38,6 +38,7 @@ public class Order extends BaseAudityModel {
     
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonIgnore
     private Restaurant restaurant;
     
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -48,6 +49,7 @@ public class Order extends BaseAudityModel {
     
     @ManyToOne
     @JoinColumn(name = "courier_id")
+    @JsonIgnore
     private Courier courier;
     
     @Enumerated(EnumType.STRING)

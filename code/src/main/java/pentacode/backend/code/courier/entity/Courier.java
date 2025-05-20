@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +38,7 @@ public class Courier extends BaseAudityModel {
     private boolean isOnline;
     
     @OneToMany(mappedBy = "courier")
+    @JsonIgnore
     private List<Order> orders;
 
     @Column(nullable = false)

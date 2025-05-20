@@ -22,6 +22,7 @@ import lombok.Setter;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.customer.entity.Customer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Getter
@@ -34,15 +35,19 @@ public class Restaurant extends BaseAudityModel {
     private String name;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
     private List<Order> orders;
 
     @OneToMany(mappedBy = "restaurant", fetch=FetchType.EAGER)
+    @JsonIgnore
     private List<Menu> menus;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
     private List<Category> categories;
 
     @ManyToOne
+    @JsonIgnore
     private Restaurant restaurant;
     
     private String imageUrl;
@@ -69,10 +74,12 @@ public class Restaurant extends BaseAudityModel {
     @JoinTable(name = "restaurant_customer",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id"))
+    @JsonIgnore
     private List<Customer> customers;
     private float longitude;
     private float latitude;
 
     @OneToMany(mappedBy = "restaurant", fetch=FetchType.EAGER)
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 }

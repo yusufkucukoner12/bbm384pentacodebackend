@@ -41,9 +41,11 @@ public class Customer extends BaseAudityModel{
 
     @OneToOne
     @JoinColumn(name = "order_id", referencedColumnName = "pk")
+    @JsonIgnore
     private Order order;
 
     @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+    @JsonIgnore
     private List<Order> orderHistory = new ArrayList<>();
 
     public void addOrderToHistory(Order order) {
@@ -52,6 +54,7 @@ public class Customer extends BaseAudityModel{
 
     // one to many relationship with favorite restaurants create the table do not use mapped by
     @ManyToMany(mappedBy="customers", fetch=FetchType.EAGER)
+    @JsonIgnore
     private List<Restaurant> favoriteRestaurants;
 
     @ManyToMany(fetch=FetchType.EAGER)
@@ -60,6 +63,7 @@ public class Customer extends BaseAudityModel{
         joinColumns = @JoinColumn(name = "customer_id"),
         inverseJoinColumns = @JoinColumn(name = "order_id")
     )
+    @JsonIgnore
     private List<Order> favoriteOrders = new ArrayList<>();
 
     @OneToOne(mappedBy = "customer")
@@ -67,5 +71,6 @@ public class Customer extends BaseAudityModel{
     private User user;
 
     @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 }
