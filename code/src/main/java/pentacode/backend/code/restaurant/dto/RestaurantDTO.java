@@ -23,10 +23,12 @@ public class RestaurantDTO {
     private String foodType;
     private String openingHours;
     private String closingHours;
-    private String deliveryTime;
-    private String deliveryFee;
-    private String minOrderAmount;
-    private String maxOrderAmount;
+    private Integer deliveryTime;
+    private Integer deliveryFee;
+    private Integer minOrderAmount;
+    private Integer maxOrderAmount;
+    private Double rating;
+    private Integer numberOfRatings;
     private float longitude;
     private float latitude;
 }

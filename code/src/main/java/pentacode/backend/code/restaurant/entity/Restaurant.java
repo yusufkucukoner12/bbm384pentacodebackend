@@ -5,9 +5,13 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
+import pentacode.backend.code.customer.entity.Customer;
 
 @Entity
 @Getter
@@ -49,10 +54,20 @@ public class Restaurant extends BaseAudityModel {
     private String foodType;
     private String openingHours;
     private String closingHours;
-    private String deliveryTime;
-    private String deliveryFee;
-    private String minOrderAmount;
-    private String maxOrderAmount;
+    private Integer deliveryTime;
+    private Integer deliveryFee;
+    private Integer minOrderAmount;
+    private Integer maxOrderAmount;
+
+    private Double rating = 0.0;
+    private Integer numberOfRatings = 0;
+
+    // many to one customer, create the table fields
+    @ManyToMany
+    @JoinTable(name = "restaurant_customer",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "customer_id"))
+    private List<Customer> customers;
     private float longitude;
     private float latitude;
 }

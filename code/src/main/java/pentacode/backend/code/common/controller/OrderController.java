@@ -2,6 +2,7 @@ package pentacode.backend.code.common.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,6 +62,33 @@ public class OrderController {
         Long courierPk = user.getCourier().getPk();
         List<OrderDTO> orderDTOs = orderService.getOrderByCourierPk(courierPk, accept, past);
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, orderDTOs, orderDTOs.size());
+    }
+
+    @PostMapping("/rate-order/{pk}")
+    public ResponseEntity<Object> rateOrder(@PathVariable Long pk, @RequestParam("rating") Double rating) {
+        System.out.println("ANANIZIN AMIII YAA");
+        try {
+            OrderDTO orderDTO = orderService.rateOrder(pk, rating);
+            return ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
+
+    @PostMapping("/re-order/{pk}")
+    public ResponseEntity<Object> reOrder(@AuthenticationPrincipal User user, @PathVariable Long pk) {
+        try {
+            Order userOrder = user.getCustomer().getOrder();
+            // now using the pk make it userOrder is same as the order with the pk
+            OrderDTO orderDTO = orderService.reOrder(userOrder, pk);
+            if (orderDTO != null) {
+                return ResponseEntity.ok("Success");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
     }
 }
 

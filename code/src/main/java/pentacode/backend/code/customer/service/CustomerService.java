@@ -1,5 +1,6 @@
 package pentacode.backend.code.customer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,7 @@ import pentacode.backend.code.customer.mapper.CustomerMapper;
 import pentacode.backend.code.customer.repository.CustomerRepository;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
+import pentacode.backend.code.restaurant.mapper.RestaurantMapper;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
 @Service
@@ -32,6 +34,7 @@ public class CustomerService extends BaseService<Customer>{
     private final OrderMapper orderMapper;
     private final CustomerMapper customerMapper;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantMapper restaurantMapper;
 
 
     public CustomerService(OrderRepository orderRepository,
@@ -39,7 +42,8 @@ public class CustomerService extends BaseService<Customer>{
                             OrderItemRepository orderItemRepository,
                             OrderMapper orderMapper,
                             RestaurantRepository restaurantRepository,
-                            CustomerMapper customerMapper) {
+                            CustomerMapper customerMapper,
+                            RestaurantMapper restaurantMapper) {
         super(customerRepository);
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
@@ -47,6 +51,7 @@ public class CustomerService extends BaseService<Customer>{
         this.orderMapper = orderMapper;
         this.restaurantRepository = restaurantRepository;
         this.customerMapper = customerMapper;
+        this.restaurantMapper = restaurantMapper;
     }
 
     public void createOrder(Customer customer) {
@@ -131,6 +136,16 @@ public class CustomerService extends BaseService<Customer>{
         if (order.getRestaurant() == null) {
             throw new IllegalArgumentException("Restaurant not assigned to the order.");
         }
+
+        if(order.getTotalPrice() + order.getRestaurant().getDeliveryFee() < order.getRestaurant().getMinOrderAmount()) {
+            throw new IllegalArgumentException("Minimum order amount not met.");
+        }
+        if(order.getTotalPrice() + order.getRestaurant().getDeliveryFee() > order.getRestaurant().getMaxOrderAmount()) {
+            throw new IllegalArgumentException("Maximum order amount exceeded.");
+        }
+        if (order.getOrderItems().isEmpty()) {
+            throw new IllegalArgumentException("Order is empty.");
+        }
         order.setStatus(OrderStatusEnum.PLACED);
         customer.addOrderToHistory(order);
         System.out.println("Order items: " + order.getOrderItems());
@@ -184,5 +199,63 @@ public class CustomerService extends BaseService<Customer>{
         // Persist and return DTO
         Customer saved = customerRepository.save(customer);
         return customerMapper.mapToDTO(saved);
+    }
+
+    @Transactional
+    public RestaurantDTO addToFavorite(Customer customer, Long pk) {
+        Restaurant restaurant = restaurantRepository.findById(pk)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        if (customer.getFavoriteRestaurants() == null) {
+            customer.setFavoriteRestaurants(new ArrayList<>());
+        }
+        if (restaurant.getCustomers() == null) {
+            restaurant.setCustomers(new ArrayList<>());
+        }
+
+        if (!customer.getFavoriteRestaurants().contains(restaurant)) {
+            customer.getFavoriteRestaurants().add(restaurant);
+        }
+
+        if (!restaurant.getCustomers().contains(customer)) {
+            restaurant.getCustomers().add(customer);
+        }
+
+        restaurantRepository.save(restaurant);
+
+        return restaurantMapper.mapToDTO(restaurant);
+    }
+
+    public List<RestaurantDTO> getFavoriteRestaurants(Customer customer) {
+        List<Restaurant> favoriteRestaurants = customer.getFavoriteRestaurants();
+        return restaurantMapper.mapToListDTO(favoriteRestaurants);
+    }
+
+    public boolean isFavorite(Customer customer, Long pk) {
+        Restaurant restaurant = restaurantRepository.findById(pk)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+        return customer.getFavoriteRestaurants().contains(restaurant);
+    }
+    
+    @Transactional
+    public RestaurantDTO removeFromFavorite(Customer customer, Long pk) {
+        Restaurant restaurant = restaurantRepository.findById(pk)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        if (customer.getFavoriteRestaurants() != null) {
+            customer.getFavoriteRestaurants().remove(restaurant);
+        }
+        if (restaurant.getCustomers() != null) {
+            restaurant.getCustomers().remove(customer);
+        }
+
+        restaurantRepository.save(restaurant);
+
+        return restaurantMapper.mapToDTO(restaurant);
+    }
+    public CustomerDTO getCustomerById(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        return customerMapper.mapToDTO(customer);
     }
 }

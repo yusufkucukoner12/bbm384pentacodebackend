@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Null;
 import pentacode.backend.code.common.dto.CreateOrderRequestDTO;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.dto.OrderItemRequestDTO;
@@ -222,6 +223,83 @@ public class OrderService extends BaseService<Order> {
         Order order = new Order();
         customer.setOrder(order);
         return orderRepository.save(order);
+    }
+    @Transactional
+    public OrderDTO rateOrder(Long orderId, Double rating) {
+        // get the restaurant from order
+        Order order = super.findByPkOr404(orderId);
+        if (order == null) {
+            return null;
+        }
+        Restaurant restaurant = order.getRestaurant();
+        if (restaurant == null) {
+            return null;
+        }
+        // get the rating from restaurant
+        Double ratingRestaurant = restaurant.getRating();
+        // set the rating of 
+        System.out.println("RATING: " + rating);
+        System.out.println("RATING RESTAURANT: " + ratingRestaurant);
+
+        restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() + 1);
+        restaurant.setRating((ratingRestaurant + rating)/restaurant.getNumberOfRatings());
+        order.setRating(rating.intValue());
+
+        order.setRated(true);        
+        
+
+        restaurantRepository.save(restaurant);
+
+        // RETURN THE ORDER
+        return orderMapper.mapToDTO(order);
+    }
+
+    public OrderDTO reOrder(Order userOrder, Long orderId) {
+        Order order = super.findByPkOr404(orderId);
+        System.out.println("ANANIN AMI BE KARDEŞİM");
+        
+        // get the all fields from order including order items etc.
+        if (order == null) {
+            return null;
+        }
+        // set the order to userOrder
+        userOrder.setRestaurant(order.getRestaurant());
+        userOrder.setName("Re-Order for " + order.getRestaurant().getName());
+        userOrder.setCourier(null);
+        userOrder.setStatus(OrderStatusEnum.AT_CART);
+        userOrder.setCourierAssignmentAccepted(false);
+        userOrder.setTotalPrice(0.0);
+
+        List<OrderItem> orderItemss = userOrder.getOrderItems();
+
+        for (OrderItem item : orderItemss) {
+            item.setOrder(null);
+            orderItemRepository.save(item);
+        }
+
+
+        userOrder.setOrderItems(new ArrayList<>());
+        
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Menu menu = orderItem.getMenu();
+            OrderItem newOrderItem = new OrderItem();
+            newOrderItem.setMenu(menu);
+            newOrderItem.setQuantity(orderItem.getQuantity());
+            newOrderItem.setOrder(userOrder);
+            orderItemRepository.save(newOrderItem);
+            orderItems.add(newOrderItem);
+        }
+        userOrder.setOrderItems(orderItems);
+
+        for(OrderItem orderItem : orderItems) {
+            userOrder.setTotalPrice(userOrder.getTotalPrice() + (orderItem.getMenu().getPrice() * orderItem.getQuantity()));
+        }
+        // save the order
+        userOrder = orderRepository.save(userOrder);
+
+        return orderMapper.mapToDTO(userOrder);
     }
 
 }
