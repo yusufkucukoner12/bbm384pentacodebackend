@@ -211,5 +211,8 @@ public class AuthenticationService implements UserDetailsService{
         userRepository.save(user);
         return userRepository.findById(UserId);
     }
-    
+    public Boolean getUserBanStatus(Long UserId){
+        User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return user.isBanned();
+    }
 }
