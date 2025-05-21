@@ -73,4 +73,6 @@ public class Customer extends BaseAudityModel{
     @OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
+
+    private Double money;
 }

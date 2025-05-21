@@ -231,4 +231,16 @@ public class CustomerController {
             return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
     }
+
+    @GetMapping("/current-money")
+    public ResponseEntity<Object> getCurrentMoney(@AuthenticationPrincipal User user) {
+        try {
+            Customer customer = user.getCustomer();
+            Double currentMoney = customer.getMoney();
+            return ResponseHandler.generatePkResponse("Current money retrieved successfully", HttpStatus.OK, currentMoney);
+        }   
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving current money", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }        
+    }
 }

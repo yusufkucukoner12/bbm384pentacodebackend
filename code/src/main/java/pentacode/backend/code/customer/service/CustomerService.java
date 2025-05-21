@@ -112,10 +112,17 @@ public class CustomerService extends BaseService<Customer>{
                     order.setTotalPrice(order.getTotalPrice() - menu.getPrice());
                 } else {
                     item.setOrder(null);
+                    order.setTotalPrice(order.getTotalPrice() - menu.getPrice());
                 }
                 orderItemRepository.save(item);
                 itemFound = true;
             }
+        }
+
+        System.out.println("ORDER ITEMSSSSS " + order.getOrderItems().size());
+
+        if (order.getTotalPrice() == 0) {
+            order.setRestaurant(null);
         }
 
         if (!itemFound) {
@@ -136,7 +143,12 @@ public class CustomerService extends BaseService<Customer>{
         if (order.getRestaurant() == null) {
             throw new IllegalArgumentException("Restaurant not assigned to the order.");
         }
-
+        if (customer.getMoney() == null) {
+            throw new IllegalArgumentException("Customer has no money.");
+        }
+        if (customer.getMoney() < order.getTotalPrice() + order.getRestaurant().getDeliveryFee()) {
+            throw new IllegalArgumentException("Insufficient funds.");
+        }
         if(order.getTotalPrice() + order.getRestaurant().getDeliveryFee() < order.getRestaurant().getMinOrderAmount()) {
             throw new IllegalArgumentException("Minimum order amount not met.");
         }
@@ -147,6 +159,7 @@ public class CustomerService extends BaseService<Customer>{
             throw new IllegalArgumentException("Order is empty.");
         }
         order.setStatus(OrderStatusEnum.PLACED);
+        customer.setMoney(customer.getMoney() - (order.getTotalPrice() + order.getRestaurant().getDeliveryFee()));
         customer.addOrderToHistory(order);
         System.out.println("Order items: " + order.getOrderItems());
         orderRepository.save(order);

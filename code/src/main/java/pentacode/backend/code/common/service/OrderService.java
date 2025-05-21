@@ -292,7 +292,6 @@ public class OrderService extends BaseService<Order> {
         if (order == null) {
             return null;
         }
-        System.out.println("ORDER: " + order);
 
         // set the order to userOrder
         userOrder.setRestaurant(order.getRestaurant());
