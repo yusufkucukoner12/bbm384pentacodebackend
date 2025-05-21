@@ -342,7 +342,11 @@ public class OrderService extends BaseService<Order> {
 
         Restaurant restaurant = order.getRestaurant();
         restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() - 1);
-        restaurant.setRating((restaurant.getRating() * restaurant.getNumberOfRatings() - review.getRating()) / restaurant.getNumberOfRatings());
+        if (restaurant.getNumberOfRatings() == 0) {
+            restaurant.setRating(0.0);
+        } else {
+            restaurant.setRating((restaurant.getRating() * restaurant.getNumberOfRatings() - review.getRating()) / restaurant.getNumberOfRatings());
+        }
         restaurantRepository.save(restaurant);
         order.setRated(false);
         order.setRating(null);
