@@ -2,6 +2,7 @@ package pentacode.backend.code.admin.controller;
 
 import java.util.*;
 
+import org.apache.catalina.connector.Request;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,12 @@ import pentacode.backend.code.restaurant.service.RestaurantService;
 import pentacode.backend.code.courier.service.CourierService;
 import pentacode.backend.code.customer.service.CustomerService;
 import pentacode.backend.code.admin.service.AdminService;
+import pentacode.backend.code.auth.CreateUserRequest;
+import pentacode.backend.code.auth.CreateUserResponse;
 import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
+import pentacode.backend.code.auth.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -26,18 +30,21 @@ public class AdminController {
     private final RestaurantService restaurantService;
     private final CustomerService customerService;
     private final AdminService adminService;
+    private final AuthenticationService authenticationService;
 
     
     public AdminController(OrderService orderService,
                            CourierService courierService,
                            RestaurantService restaurantService,
                            CustomerService customerService,
-                           AdminService adminService) {
+                           AdminService adminService,
+                           AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.orderService = orderService;
         this.courierService = courierService;
         this.restaurantService = restaurantService;
         this.customerService = customerService;
+        this.authenticationService = authenticationService;
     }
     
     @PostMapping("/orders/{orderId}/assign-courier/{courierId}")
@@ -100,7 +107,6 @@ public class AdminController {
         Optional<User> user = adminService.banUser(userId);
         return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
     }
-
     @PutMapping("/unban/{userId}")
     public ResponseEntity<Object> unbanUser(@PathVariable Long userId) {
         Optional<User> user = adminService.unbanUser(userId);
@@ -110,5 +116,14 @@ public class AdminController {
     public ResponseEntity<Object> getUserBanStatus(@PathVariable Long userId) {
         Boolean isBanned = adminService.getUserBanStatus(userId);
         return ResponseHandler.generatePkResponse("User ban status retrieved" , HttpStatus.OK , isBanned);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<Object> createUserByAdmin(@RequestBody CreateUserRequest request) {
+        CreateUserResponse response = authenticationService.createUser(request);
+        if (response.getMessage().equals("Success")) {
+            return ResponseHandler.generatePkResponse("User created successfully", HttpStatus.CREATED, response.getUser());
+        } else {
+            return ResponseHandler.generatePkResponse(response.getMessage(), HttpStatus.BAD_REQUEST, null);
+        }
     }
 }

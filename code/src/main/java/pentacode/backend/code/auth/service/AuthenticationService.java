@@ -202,11 +202,13 @@ public class AuthenticationService implements UserDetailsService{
     public Optional<User> banUser(Long UserId) {
         User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setBanned(true);
+        user.setAuthorities(null);
         userRepository.save(user);
         return userRepository.findById(UserId);
     }
     public Optional<User> unbanUser(Long UserId) {
         User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        System.out.println(user.getUsername());
         user.setBanned(false);
         userRepository.save(user);
         return userRepository.findById(UserId);
