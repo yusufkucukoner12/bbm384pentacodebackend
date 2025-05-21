@@ -20,7 +20,6 @@ public enum Role implements GrantedAuthority {
         return this.value;
     }
 
-
     @Override
     public String getAuthority() {
         return name();
