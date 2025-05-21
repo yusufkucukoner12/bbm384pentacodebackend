@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.entity.Review;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.customer.entity.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;

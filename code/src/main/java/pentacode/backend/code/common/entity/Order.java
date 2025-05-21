@@ -25,7 +25,6 @@ import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
-import pentacode.backend.code.restaurant.entity.Review;
 
 @Entity
 @Getter

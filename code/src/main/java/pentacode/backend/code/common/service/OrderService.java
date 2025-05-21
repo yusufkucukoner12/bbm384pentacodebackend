@@ -10,19 +10,22 @@ import jakarta.validation.constraints.Null;
 import pentacode.backend.code.common.dto.CreateOrderRequestDTO;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.dto.OrderItemRequestDTO;
+import pentacode.backend.code.common.dto.ReviewDTO;
 import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.OrderItem;
 import pentacode.backend.code.common.entity.OrderStatusEnum;
+import pentacode.backend.code.common.entity.Review;
 import pentacode.backend.code.common.mapper.OrderMapper;
+import pentacode.backend.code.common.mapper.ReviewMapper;
 import pentacode.backend.code.common.repository.OrderItemRepository;
 import pentacode.backend.code.common.repository.OrderRepository;
+import pentacode.backend.code.common.repository.ReviewRepository;
 import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.courier.repository.CourierRepository;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Menu;
 import pentacode.backend.code.restaurant.entity.Restaurant;
-import pentacode.backend.code.restaurant.entity.Review;
 import pentacode.backend.code.restaurant.repository.MenuRepository;
 import pentacode.backend.code.restaurant.repository.RestaurantRepository;
 
@@ -34,13 +37,17 @@ public class OrderService extends BaseService<Order> {
     private final MenuRepository menuRepository;
     private final OrderItemRepository orderItemRepository;
     private final CourierRepository courierRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
 
     public OrderService(OrderRepository orderRepository, 
                         OrderMapper orderMapper,
                         RestaurantRepository restaurantRepository, 
                         MenuRepository menuRepository,
                         OrderItemRepository orderItemRepository,
-                        CourierRepository courierRepository) {
+                        CourierRepository courierRepository,
+                        ReviewRepository reviewRepository,
+                        ReviewMapper reviewMapper) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
@@ -48,6 +55,8 @@ public class OrderService extends BaseService<Order> {
         this.menuRepository = menuRepository;
         this.orderItemRepository = orderItemRepository;
         this.courierRepository = courierRepository;
+        this.reviewRepository = reviewRepository;
+        this.reviewMapper = reviewMapper;
     }
 
     public List<OrderDTO> getOrderByRestaurantPk(Long pk){
@@ -226,8 +235,9 @@ public class OrderService extends BaseService<Order> {
         return orderRepository.save(order);
     }
     @Transactional
-    public OrderDTO rateOrder(Long orderId, Double rating, Customer customer) {
+    public OrderDTO rateOrder(Long orderId, Double rating, Customer customer, String reviewText) {
         // get the restaurant from order
+        
         Order order = super.findByPkOr404(orderId);
         if (order == null) {
             return null;
@@ -251,6 +261,8 @@ public class OrderService extends BaseService<Order> {
         review.setRestaurant(restaurant);
         review.setOrder(order);
         review.setCustomer(customer);
+        review.setReviewText(reviewText);
+        reviewRepository.save(review);
 
         if (restaurant.getReviews() == null) {
             restaurant.setReviews(new ArrayList<>());
@@ -280,6 +292,8 @@ public class OrderService extends BaseService<Order> {
         if (order == null) {
             return null;
         }
+        System.out.println("ORDER: " + order);
+
         // set the order to userOrder
         userOrder.setRestaurant(order.getRestaurant());
         userOrder.setName("Re-Order for " + order.getRestaurant().getName());
@@ -319,5 +333,65 @@ public class OrderService extends BaseService<Order> {
 
         return orderMapper.mapToDTO(userOrder);
     }
+
+    public OrderDTO deleteReview(Long reviewId, Customer customer) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        Order order = review.getOrder();
+
+        System.out.println("REVIEW ID: " + reviewId);
+
+        Restaurant restaurant = order.getRestaurant();
+        restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() - 1);
+        restaurant.setRating((restaurant.getRating() * restaurant.getNumberOfRatings() - review.getRating()) / restaurant.getNumberOfRatings());
+        restaurantRepository.save(restaurant);
+        order.setRated(false);
+        order.setRating(null);
+        order.setReviews(null);
+        orderRepository.save(order);
+        reviewRepository.delete(review);
+        return orderMapper.mapToDTO(order);
+    }
+
+    public OrderDTO updateReview(Long orderId, ReviewDTO reviewDTO, Customer customer) {
+        Long reviewId = reviewDTO.getPk();
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+
+        System.out.println("REVIEW ID: " + reviewId);
+        System.out.println("REVIEW: " + review);
+
+        if (review == null) {
+            return null;
+        }
+        int oldRating = review.getRating();
+
+        review.setRating(reviewDTO.getRating());
+        review.setReviewText(reviewDTO.getReviewText());
+        reviewRepository.save(review);
+
+        Order order = review.getOrder();
+        order.setRating(reviewDTO.getRating());        
+
+        Restaurant restaurant = order.getRestaurant();
+        System.out.println("rest" + restaurant.getNumberOfRatings());
+        restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() - 1);
+        if (restaurant.getNumberOfRatings() == 0) {
+            System.out.println("Restaurant number of ratings is 0");
+            restaurant.setRating((double)reviewDTO.getRating());
+            restaurant.setNumberOfRatings(1);
+        } else {
+            restaurant.setRating((restaurant.getRating() * (double)restaurant.getNumberOfRatings() -((double)oldRating)) / (double)restaurant.getNumberOfRatings());
+            restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() + 1);
+            restaurant.setRating((restaurant.getRating() * (double)restaurant.getNumberOfRatings() + (double)reviewDTO.getRating()) / (double)restaurant.getNumberOfRatings());
+        }
+        restaurantRepository.save(restaurant);
+
+        return orderMapper.mapToDTO(order);
+    }
+
+    public List<ReviewDTO> getAllReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        return reviewMapper.mapToListDTO(reviews);
+    }
+
 
 }

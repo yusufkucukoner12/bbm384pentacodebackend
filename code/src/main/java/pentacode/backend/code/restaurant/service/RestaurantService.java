@@ -126,7 +126,6 @@ public class RestaurantService extends BaseService<Restaurant> {
 
             // Filter open restaurants
             restaurants = restaurants.stream()
-                .filter(this::isRestaurantOpen)
                 .collect(Collectors.toList());
 
             // Sort in Java

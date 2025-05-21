@@ -1,4 +1,4 @@
-package pentacode.backend.code.restaurant.entity;
+package pentacode.backend.code.common.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -9,9 +9,9 @@ import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import pentacode.backend.code.common.entity.Order;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.customer.entity.Customer;
+import pentacode.backend.code.restaurant.entity.Restaurant;
 
 
 @Entity

@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.entity.Review;
 import pentacode.backend.code.common.entity.base.BaseAudityModel;
 import pentacode.backend.code.restaurant.entity.Restaurant;
-import pentacode.backend.code.restaurant.entity.Review;
 
 @Entity
 @Getter
