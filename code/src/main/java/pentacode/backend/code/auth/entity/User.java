@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Set;
 
 import pentacode.backend.code.admin.entity.Admin;
+import pentacode.backend.code.common.entity.Ticket;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.customer.entity.Customer;
 import pentacode.backend.code.restaurant.entity.Restaurant;
@@ -85,5 +86,4 @@ public class User implements UserDetails {
     @OneToOne
     @JoinColumn(name = "admin_id")  // This will create a "admin_id" foreign key column in users table
     private Admin admin;
-    
 }

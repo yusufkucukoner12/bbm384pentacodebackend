@@ -20,12 +20,16 @@ import pentacode.backend.code.common.entity.base.BaseAudityModel;
 @NoArgsConstructor
 public class Ticket extends BaseAudityModel {
     private String subject;
-    private ArrayList<String> ticketRequests;
-    private ArrayList<String> ticketResponses;
+    private ArrayList<Text> ticketRequests;
+    private ArrayList<Text> ticketResponses;
+    
     @Column(name = "is_resolved")
     private boolean isResolved;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private Integer index = 0;
 }
+
