@@ -20,6 +20,11 @@ public interface TicketRepository extends BaseRepository<Ticket> {
     @Query("SELECT t FROM Ticket t WHERE t.user.restaurant.id IS NOT NULL")
     List<Ticket> findAllByRestaurantIdNotNull();
 
+    @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.isResolved = true")
+    List<Ticket> findAllByUserIdAndResolvedTrue(Long userId);
+
+    @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.isResolved = false")
+    List<Ticket> findAllByUserIdAndResolvedFalse(Long userId);
     
     
     

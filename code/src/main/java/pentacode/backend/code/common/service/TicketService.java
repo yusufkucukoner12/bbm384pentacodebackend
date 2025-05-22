@@ -87,8 +87,17 @@ public class TicketService extends BaseService<Ticket> {
         return ticketDTO;
     }
 
-    public List<TicketDTO> getAllTickets(User user) {
-        return ticketMapper.mapToListDTO(ticketRepository.findAllByUserId(user.getId()));
+    public List<TicketDTO> getAllTickets(User user, String status) {
+        if (status == null) {
+            return ticketMapper.mapToListDTO(ticketRepository.findAllByUserId(user.getId()));
+        } else if (status.equals("resolved")) {
+            return ticketMapper.mapToListDTO(ticketRepository.findAllByUserIdAndResolvedTrue(user.getId()));
+        } else if (status.equals("unresolved")) {
+            return ticketMapper.mapToListDTO(ticketRepository.findAllByUserIdAndResolvedFalse(user.getId()));
+        }
+        else {
+            throw new RuntimeException("Invalid status");
+        }
     }    
 
     public List<TicketDTO> getAllTickets(String role) {

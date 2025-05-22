@@ -98,16 +98,16 @@ public class AuthController {
     }
 
     @GetMapping("/get-tickets")
-    public ResponseEntity<Object> getTickets(@AuthenticationPrincipal User user) {
+    public ResponseEntity<Object> getTickets(@AuthenticationPrincipal User user, @RequestParam(required = false) String status) {
         try {
-            List<TicketDTO> tickets = ticketService.getAllTickets(user);
+            List<TicketDTO> tickets = ticketService.getAllTickets(user, status);
             return ResponseHandler.generateListResponse("Success", HttpStatus.OK, tickets, tickets.size());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @GetMapping("/get-all-tickets")
+     @GetMapping("/get-all-tickets")
     public ResponseEntity<Object> getAllTickets(@AuthenticationPrincipal User user, @RequestParam(required = false) String role) {
         try {
             List<TicketDTO> tickets = ticketService.getAllTickets(role);
