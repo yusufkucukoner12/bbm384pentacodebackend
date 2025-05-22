@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/restaurant/**").hasAnyRole("RESTAURANT", "CUSTOMER") 
                         .requestMatchers("/api/auth/admin").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/couriers/available").hasRole("RESTAURANT")
+                        .requestMatchers("/api/couriers/available").hasAnyRole("RESTAURANT","ADMIN")
                         .requestMatchers("/api/order/finish-order").hasRole("CUSTOMER")
                         .requestMatchers("/api/restaurant/orders/*/status").hasRole("RESTAURANT")
                         .requestMatchers("/api/restaurant/orders/*/assign-courier/*").hasRole("RESTAURANT")

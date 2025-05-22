@@ -21,6 +21,7 @@ import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.auth.service.AuthenticationService;
+import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -125,5 +126,23 @@ public class AdminController {
         } else {
             return ResponseHandler.generatePkResponse(response.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
+    }
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<Object> updateOrderStatus(
+            @PathVariable("orderId") Long orderId,
+            @RequestBody UpdateOrderStatusRequestDTO request) {
+        OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, request.getStatus());
+        if (updatedOrder == null) {
+            return ResponseHandler.generatePkResponse(
+                "Failed to update order status",
+                HttpStatus.BAD_REQUEST,
+                null
+            );
+        }
+        return ResponseHandler.generatePkResponse(
+            "Order status updated successfully",
+            HttpStatus.OK,
+            updatedOrder
+        );
     }
 }
