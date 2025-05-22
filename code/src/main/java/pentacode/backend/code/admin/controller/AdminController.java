@@ -144,6 +144,7 @@ public class AdminController {
             HttpStatus.OK,
             updatedOrder
         );
+    }
 
     @PutMapping("/customer/edit/{pk}")
     public ResponseEntity<Object> updateCustomerProfile(@PathVariable Long pk, @RequestBody CustomerDTO dto) {
