@@ -3,23 +3,35 @@ package pentacode.backend.code.courier.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import pentacode.backend.code.common.dto.ReviewDTO;
+import pentacode.backend.code.common.entity.Order;
+import pentacode.backend.code.common.entity.Review;
+import pentacode.backend.code.common.repository.OrderRepository;
+import pentacode.backend.code.common.repository.ReviewRepository;
 import pentacode.backend.code.common.service.base.BaseService;
 import pentacode.backend.code.courier.dto.CourierDTO;
 import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.courier.mapper.CourierMapper;
 import pentacode.backend.code.courier.repository.CourierRepository;
+import pentacode.backend.code.customer.entity.Customer;
 
 @Service
 public class CourierService extends BaseService<Courier> {
     private final CourierRepository courierRepository;
     private final CourierMapper courierMapper;
+    private final ReviewRepository reviewRepository;
+    private final OrderRepository orderRepository;
 
-    public CourierService(CourierRepository courierRepository, CourierMapper courierMapper) {
+    public CourierService(CourierRepository courierRepository, CourierMapper courierMapper, ReviewRepository reviewRepository, OrderRepository orderRepository) {
         super(courierRepository);
         this.courierRepository = courierRepository;
         this.courierMapper = courierMapper;
+        this.reviewRepository = reviewRepository;
+        this.orderRepository = orderRepository;
     }
 
     public List<CourierDTO> getAvailableCouriers() {
@@ -70,6 +82,79 @@ public class CourierService extends BaseService<Courier> {
         List<Courier> couriers = courierRepository.findAll();
         return courierMapper.mapToListDTO(couriers);
     }
-    
+
+    // rate courier
+    public CourierDTO rateCourier(Long orderPk, Integer rating, ReviewDTO reviewDTO) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5");
+        }
+        Order order = orderRepository.findByPk(orderPk);
+        orderRepository.save(order);
+        String reviewText = reviewDTO.getReviewText();
+        Courier courier = order.getCourier();
+
+        Review review = Review.builder()
+                .reviewText(reviewText)
+                .rating(rating)
+                .courier(courier)
+                .order2(order)
+                .build();
+
+        reviewRepository.save(review);
+        
+
+        Double newRating = (courier.getRating() + rating) / (courier.getRatingCount() + 1);
+        courier.setRating(newRating);
+        courier.setRatingCount(courier.getRatingCount() + 1);
+
+        Courier savedCourier = courierRepository.save(courier);
+        return courierMapper.mapToDTO(savedCourier);        
+    }
+
+    public ReviewDTO checkCourierReview(Long orderPk, Long courierPk) {
+        Review review = reviewRepository.findByOrderIdAndCourierId(orderPk, courierPk);
+        return review != null ? ReviewDTO.builder()
+                .reviewText(review.getReviewText())
+                .rating(review.getRating())
+                .build() : null;
+    }
+
+    public void deleteCourierReview(Long reviewPk) {
+        Review review = reviewRepository.findByPk(reviewPk);
+        if (review == null) {
+            throw new IllegalArgumentException("Review not found");
+        }
+        Courier courier = review.getCourier();
+        if (courier.getRatingCount() > 1) {
+            Double newRating = (courier.getRating() * courier.getRatingCount() - review.getRating()) / (courier.getRatingCount() - 1);
+            courier.setRating(newRating);
+            courier.setRatingCount(courier.getRatingCount() - 1);
+        }
+        else {
+            courier.setRating(0.0);
+            courier.setRatingCount(0);
+        }
+        courierRepository.save(courier);
+        reviewRepository.delete(review);
+    }
+
+    public ReviewDTO updateCourierReview(Long reviewPk, ReviewDTO reviewDTO) {
+        Review review = reviewRepository.findByPk(reviewPk);
+        if (review == null) {
+            throw new IllegalArgumentException("Review not found");
+        }
+        int oldRating = review.getRating();
+        review.setReviewText(reviewDTO.getReviewText());
+        review.setRating(reviewDTO.getRating());
+        Courier courier = review.getCourier();
+        courier.setRating((courier.getRating() * courier.getRatingCount() - oldRating + review.getRating()) / (courier.getRatingCount()));
+        courierRepository.save(courier);
+        reviewRepository.save(review);
+        return ReviewDTO.builder()
+                .reviewText(review.getReviewText())
+                .rating(review.getRating())
+                .pk(review.getPk())
+                .build();
+    }
 
 }

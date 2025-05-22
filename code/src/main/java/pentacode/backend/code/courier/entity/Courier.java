@@ -46,4 +46,7 @@ public class Courier extends BaseAudityModel {
     private String email;
 
     private String profilePictureUrl;
+
+    private Double rating = 0.0;
+    private Integer ratingCount = 0;
 }
