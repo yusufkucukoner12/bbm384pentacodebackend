@@ -155,6 +155,12 @@ public class CourierService extends BaseService<Courier> {
                 .rating(review.getRating())
                 .pk(review.getPk())
                 .build();
+    }   
+
+    public CourierDTO updateStatus(Courier courier) {
+        courier.setAvailable(!courier.isAvailable());
+        courierRepository.save(courier);
+        return courierMapper.mapToDTO(courier);
     }
 
 }

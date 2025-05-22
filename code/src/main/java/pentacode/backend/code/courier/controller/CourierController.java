@@ -133,4 +133,18 @@ public class CourierController {
         }
     }
 
+    @PostMapping("/update-status")
+    public ResponseEntity<Object> updateCourierStatus(
+            @AuthenticationPrincipal User user) {
+        try {
+            CourierDTO courierDTO = courierService.updateStatus(user.getCourier());
+            return ResponseHandler.generatePkResponse("Courier status updated successfully",
+                                                     HttpStatus.OK,
+                                                     courierDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
 }
