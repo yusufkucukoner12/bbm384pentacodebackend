@@ -381,14 +381,6 @@ public class OrderService extends BaseService<Order> {
         return orderMapper.mapToDTO(order);
     }
 
-<<<<<<< HEAD
-    /**
-     * Returns all reviews with customer, restaurant, and order details populated in ReviewDTO.
-     */
-    public List<ReviewDTO> getAllReviews() {
-        List<Review> reviews = reviewRepository.findAll();
-        return reviewMapper.mapToListDTO(reviews);
-=======
     public List<ReviewDTO> getAllReviews(String courier) {
         System.out.println("COURIER: " + courier);
         if(courier.equals("null")) {
@@ -400,7 +392,6 @@ public class OrderService extends BaseService<Order> {
         else {
             return reviewMapper.mapToListDTO(reviewRepository.findByRestaurantIdNotNull());
         }
->>>>>>> dda358bb99b154622992d61c71ef1b5c6129c942
     }
 
     public List<ReviewDTO> getReviews(User user) {
