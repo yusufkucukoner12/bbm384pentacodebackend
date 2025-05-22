@@ -69,7 +69,8 @@ public class SecurityConfig {
                                 "/api/auth/admin-login",
                                 "/api/auth/validate-token",
                                 "/images/**",
-                                "/api/order/rate-order/**"
+                                "/api/order/rate-order/**",
+                                "/api/auth/reset-password"
 
                         ).permitAll()
                         // Allow OPTIONS for all endpoints without authentication
