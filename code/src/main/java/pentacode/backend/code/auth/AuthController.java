@@ -101,7 +101,7 @@ public class AuthController {
         try {
             List<TicketDTO> tickets = ticketService.getAllTickets2(user, status);
             return ResponseHandler.generateListResponse("Success", HttpStatus.OK, tickets, tickets.size());
-        } catch (Exception e) {git
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
