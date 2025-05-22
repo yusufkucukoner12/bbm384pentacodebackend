@@ -30,14 +30,20 @@ public class CourierService extends BaseService<Courier> {
         return courierMapper.mapToDTO(super.findByPkOr404(pk));
     }
 
-    public CourierDTO updateCourier(Long pk, CourierDTO update) {
-        Courier courier = super.findByPkOr404(pk);
-        courier.setName(update.getName());
-        courier.setPhoneNumber(update.getPhoneNumber());
-        courier.setAvailable(update.isAvailable());
-        courier.setOnline(update.isOnline());
-        courierRepository.save(courier);
-        return courierMapper.mapToDTO(courier);
+    public CourierDTO updateCourier(Long pk, CourierDTO dto) {
+        Courier courier = findByPkOr404(pk);
+
+        if (dto.getName() != null && !dto.getName().trim().isEmpty()) {
+            courier.setName(dto.getName());
+        }
+        if (dto.getPhoneNumber() != null && !dto.getPhoneNumber().trim().isEmpty()) {
+            courier.setPhoneNumber(dto.getPhoneNumber());
+        }
+            courier.setAvailable(dto.isAvailable());
+            courier.setOnline(dto.isOnline());
+        
+        Courier savedCourier = courierRepository.save(courier);
+        return courierMapper.mapToDTO(savedCourier);
     }
 
     public CourierDTO updateProfilePicture(Long pk, MultipartFile file) {

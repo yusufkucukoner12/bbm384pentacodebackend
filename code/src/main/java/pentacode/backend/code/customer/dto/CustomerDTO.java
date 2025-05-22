@@ -13,7 +13,7 @@ import pentacode.backend.code.common.dto.OrderDTO;
 @Setter
 @Builder
 public class CustomerDTO {
-    private Long userId;
+    private Long pk;
     public String name;
     public String address;
     private float longitude;
