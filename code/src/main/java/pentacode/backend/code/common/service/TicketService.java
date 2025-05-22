@@ -87,7 +87,7 @@ public class TicketService extends BaseService<Ticket> {
         return ticketDTO;
     }
 
-    public List<TicketDTO> getAllTickets(User user, String status) {
+    public List<TicketDTO> getAllTickets2(User user, String status) {
         if (status == null) {
             return ticketMapper.mapToListDTO(ticketRepository.findAllByUserId(user.getId()));
         } else if (status.equals("resolved")) {

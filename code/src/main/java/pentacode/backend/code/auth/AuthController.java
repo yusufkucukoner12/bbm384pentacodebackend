@@ -99,9 +99,9 @@ public class AuthController {
     @GetMapping("/get-tickets")
     public ResponseEntity<Object> getTickets(@AuthenticationPrincipal User user, @RequestParam(required = false) String status) {
         try {
-            List<TicketDTO> tickets = ticketService.getAllTickets(user, status);
+            List<TicketDTO> tickets = ticketService.getAllTickets2(user, status);
             return ResponseHandler.generateListResponse("Success", HttpStatus.OK, tickets, tickets.size());
-        } catch (Exception e) {
+        } catch (Exception e) {git
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
