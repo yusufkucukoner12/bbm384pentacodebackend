@@ -83,4 +83,9 @@ public class Restaurant extends BaseAudityModel {
     @OneToMany(mappedBy = "restaurant", fetch=FetchType.EAGER)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
+
+    public Restaurant orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 }
