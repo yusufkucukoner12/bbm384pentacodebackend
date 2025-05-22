@@ -326,4 +326,34 @@ public class CustomerService extends BaseService<Customer>{
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
         return customer.getFavoriteOrders() != null && customer.getFavoriteOrders().contains(order);
     }
+    
+    @Transactional
+    public CustomerDTO updateCustomer(Long userId, CustomerDTO dto) {
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found for user ID: " + userId));
+
+        // Update fields if provided (partial update)
+        if (dto.getName() != null) {
+            customer.setName(dto.getName());
+        }
+        if (dto.getEmail() != null) {
+            customer.setEmail(dto.getEmail());
+        }
+        if (dto.getPhoneNumber() != null) {
+            customer.setPhoneNumber(dto.getPhoneNumber());
+        }
+        if (dto.getAddress() != null) {
+            customer.setAddress(dto.getAddress());
+        }
+        if (dto.getLongitude() != 0.0f) {
+            customer.setLongitude(dto.getLongitude());
+        }
+        if (dto.getLatitude() != 0.0f) {
+            customer.setLatitude(dto.getLatitude());
+        }
+
+        // Persist and return DTO
+        Customer saved = customerRepository.save(customer);
+        return customerMapper.mapToDTO(saved);
+    }
 }

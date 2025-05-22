@@ -98,10 +98,10 @@ public class AdminController {
         List<CustomerDTO> customers = customerService.listAllCustomers();
         return ResponseHandler.generatePkResponse("Fetched customers", HttpStatus.OK, customers);
     }
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<Object> getCustomerById(@PathVariable Long customerId) {
-            CustomerDTO customer = customerService.getCustomerById(customerId);
-            return ResponseHandler.generatePkResponse("Fetched the customer", HttpStatus.OK, customer);
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getUserById(@PathVariable Long userId) {
+        User user = adminService.getUserById(userId);
+        return ResponseHandler.generatePkResponse("Fetched the customer", HttpStatus.OK, user);
     }
     @PutMapping("/ban/{userId}")
     public ResponseEntity<Object> banUser(@PathVariable Long userId) {
@@ -127,6 +127,7 @@ public class AdminController {
             return ResponseHandler.generatePkResponse(response.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
+<<<<<<< HEAD
     @PutMapping("/orders/{orderId}/status")
     public ResponseEntity<Object> updateOrderStatus(
             @PathVariable("orderId") Long orderId,
@@ -144,5 +145,33 @@ public class AdminController {
             HttpStatus.OK,
             updatedOrder
         );
+=======
+
+    @PutMapping("/customer/edit/{pk}")
+    public ResponseEntity<Object> updateCustomerProfile(@PathVariable Long pk, @RequestBody CustomerDTO dto) {
+        CustomerDTO updatedCustomer = adminService.updateCustomerProfile(pk, dto);
+        if (updatedCustomer == null) {
+            return ResponseHandler.generatePkResponse("Failed to update customer profile", HttpStatus.BAD_REQUEST, null);
+        }
+        return ResponseHandler.generatePkResponse("Customer profile updated successfully", HttpStatus.OK, updatedCustomer);
+    }
+
+    @PutMapping("/restaurant/edit/{pk}")
+    public ResponseEntity<Object> updateRestaurantProfile(@PathVariable Long pk, @RequestBody RestaurantDTO dto) {
+        RestaurantDTO restaurant = adminService.updateRestaurantProfile(pk, dto);
+        if (restaurant == null) {
+            return ResponseHandler.generatePkResponse("Failed to fetch restaurant profile", HttpStatus.BAD_REQUEST, null);
+        }
+        return ResponseHandler.generatePkResponse("Restaurant profile fetched successfully", HttpStatus.OK, restaurant);
+    }
+
+    @PutMapping("/courier/edit/{pk}")
+    public ResponseEntity<Object> updateCourierProfile(@PathVariable Long pk, @RequestBody CourierDTO dto) {
+        CourierDTO courier = adminService.updateCourierProfile(pk, dto);
+        if (courier == null) {
+            return ResponseHandler.generatePkResponse("Failed to fetch courier profile", HttpStatus.BAD_REQUEST, null);
+        }
+        return ResponseHandler.generatePkResponse("Courier profile fetched successfully", HttpStatus.OK, courier);
+>>>>>>> 43303daa9e1b4e2d1e0cf7c9d83cac0d0fcf6aca
     }
 }
