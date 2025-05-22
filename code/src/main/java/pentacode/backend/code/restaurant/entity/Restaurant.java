@@ -88,4 +88,6 @@ public class Restaurant extends BaseAudityModel {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
+    
+    private boolean deleted = false;
 }

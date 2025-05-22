@@ -391,6 +391,9 @@ public class OrderService extends BaseService<Order> {
         return orderMapper.mapToDTO(order);
     }
 
+    /**
+     * Returns all reviews with customer, restaurant, and order details populated in ReviewDTO.
+     */
     public List<ReviewDTO> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         return reviewMapper.mapToListDTO(reviews);

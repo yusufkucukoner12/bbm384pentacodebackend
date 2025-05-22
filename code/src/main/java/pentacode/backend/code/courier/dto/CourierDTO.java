@@ -16,4 +16,5 @@ public class CourierDTO {
     private boolean isAvailable;
     private boolean isOnline;
     private String profilePictureUrl;
+    private String email;
 }

@@ -7,4 +7,6 @@ import pentacode.backend.code.courier.entity.Courier;
 public interface CourierRepository extends BaseRepository<Courier> {
     Courier findByPk(Long pk);
     List<Courier> findByIsOnlineAndIsAvailable(boolean isOnline, boolean isAvailable);
+    Courier findByPkAndDeletedFalse(Long pk);
+    List<Courier> findAllByDeletedFalse();
 }

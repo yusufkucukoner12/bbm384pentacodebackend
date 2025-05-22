@@ -14,4 +14,8 @@ public interface  CustomerRepository extends BaseRepository<Customer> {
     Optional<Customer> findByName(String name);
     Optional<Customer> findByEmail(String email);
     Customer findByPk(Long pk);
+    Optional<Customer> findByNameAndDeletedFalse(String name);
+    Optional<Customer> findByEmailAndDeletedFalse(String email);
+    Customer findByPkAndDeletedFalse(Long pk);
+    List<Customer> findAllByDeletedFalse();
 }

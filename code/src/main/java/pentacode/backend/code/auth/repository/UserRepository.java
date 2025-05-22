@@ -23,4 +23,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN u.authorities r WHERE u.email = :email AND r IN :roles")
     Optional<User> findByEmailAndAuthorities(@Param("email") String email, @Param("roles") Set<Role> roles);
+
+    Optional<User> findByRestaurant_pk(Long restaurantId);
+    Optional<User> findByCourier_pk(Long courierId);
+    Optional<User> findByCustomer_pk(Long customerId);
+    Optional<User> findByAdmin_pk(Long adminId);
 }

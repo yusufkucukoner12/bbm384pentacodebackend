@@ -23,4 +23,8 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     List<Restaurant> findRestaurantsWithFilters(
             @Param("search") String search,
             @Param("sort") String sort);
+    
+    List<Restaurant> findByNameAndDeletedFalse(String name);
+    Restaurant findByPkAndDeletedFalse(Long pk);
+    List<Restaurant> findAllByDeletedFalse();
 }

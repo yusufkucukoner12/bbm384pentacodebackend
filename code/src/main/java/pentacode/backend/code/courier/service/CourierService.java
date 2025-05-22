@@ -67,7 +67,7 @@ public class CourierService extends BaseService<Courier> {
     }
 
     public List<CourierDTO> getAllCouriers() {
-        List<Courier> couriers = courierRepository.findAll();
+        List<Courier> couriers = courierRepository.findAllByDeletedFalse();
         return courierMapper.mapToListDTO(couriers);
     }
     

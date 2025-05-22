@@ -76,14 +76,65 @@ public class AdminService {
     public List<CustomerDTO> getAllCustomers() {
         return customerService.listAllCustomers();
     }
-    public Optional<User> banUser(Long userId) {
-        return authenticationService.banUser(userId);
+    public void deleteUser(Long id) {
+        Optional<User> user = findUserByAnyEntityId(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found for provided entity id: " + id);
+        }
+        User u = user.get();
+        boolean deleted = false;
+        if (u.getCustomer() != null) {
+            Customer customer = u.getCustomer();
+            customer.setDeleted(true);
+            customerRepository.save(customer);
+            deleted = true;
+        }
+        if (u.getRestaurant() != null) {
+            Restaurant restaurant = u.getRestaurant();
+            restaurant.setDeleted(true);
+            restaurantRepository.save(restaurant);
+            deleted = true;
+        }
+        if (u.getCourier() != null) {
+            var courier = u.getCourier();
+            courier.setDeleted(true);
+            courierService.updateCourier(courier.getPk(), null); // null DTO, just to trigger save
+            deleted = true;
+        }
+        if (!deleted) {
+            throw new IllegalArgumentException("No deletable entity found for user with id: " + id);
+        }
     }
-    public Optional<User> unbanUser(Long userId) {
-        return authenticationService.unbanUser(userId);
+    public Optional<User> banUser(Long id) {
+        Optional<User> user = findUserByAnyEntityId(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found for provided entity id: " + id);
+        }
+        return authenticationService.banUser(user.get().getId());
     }
-    public Boolean getUserBanStatus(Long userId){
-        return authenticationService.getUserBanStatus(userId);
+    public Optional<User> unbanUser(Long id) {
+        Optional<User> user = findUserByAnyEntityId(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found for provided entity id: " + id);
+        }
+        return authenticationService.unbanUser(user.get().getId());
+    }
+    public Boolean getUserBanStatus(Long id) {
+        Optional<User> user = findUserByAnyEntityId(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found for provided entity id: " + id);
+        }
+        return authenticationService.getUserBanStatus(user.get().getId());
+    }
+    private Optional<User> findUserByAnyEntityId(Long id) {
+        Optional<User> user = userRepository.findByRestaurant_pk(id);
+        if (user.isPresent()) return user;
+        user = userRepository.findByCourier_pk(id);
+        if (user.isPresent()) return user;
+        user = userRepository.findByCustomer_pk(id);
+        if (user.isPresent()) return user;
+        user = userRepository.findByAdmin_pk(id);
+        return user;
     }
     public User getUserById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);

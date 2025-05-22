@@ -46,4 +46,6 @@ public class Courier extends BaseAudityModel {
     private String email;
 
     private String profilePictureUrl;
+    
+    private boolean deleted = false;
 }

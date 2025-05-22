@@ -33,6 +33,12 @@ public class LoginService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             var user = authenticationService.getByUsername(authRequest.getUsername()).orElseThrow();
+            // Check for soft-deleted linked entities
+            if ((user.getCustomer() != null && user.getCustomer().isDeleted()) ||
+                (user.getRestaurant() != null && user.getRestaurant().isDeleted()) ||
+                (user.getCourier() != null && user.getCourier().isDeleted())) {
+                throw new RuntimeException("This user is deleted");
+            }
             var stringToken = jwtService.generateToken(authRequest.getUsername());
             authenticationService.allTokenExpired(user);
             authenticationService.saveToken(user, stringToken);
@@ -40,6 +46,8 @@ public class LoginService {
             if (user.isBanned()) {
                 throw new RuntimeException("This user is banned");
             }
+            
+           
             return LoginResponse.builder().user(user).build();
         }
         throw new UsernameNotFoundException("invalid username {}" + authRequest.getUsername());

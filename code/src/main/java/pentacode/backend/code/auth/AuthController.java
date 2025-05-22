@@ -44,8 +44,12 @@ public class AuthController {
         return new ResponseEntity<>(authenticationService.createUser(createUserRequest),HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> generateToken(@Valid @RequestBody LoginRequest authRequest) {
-        return new ResponseEntity<>(loginService.login(authRequest), HttpStatus.OK);
+    public ResponseEntity<?> generateToken(@Valid @RequestBody LoginRequest authRequest) {
+        try {
+            return new ResponseEntity<>(loginService.login(authRequest), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
+        }
     }
     @PostMapping("/admin-login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest authRequest) {

@@ -185,7 +185,7 @@ public class CustomerService extends BaseService<Customer>{
         }
     }
     public List<CustomerDTO> listAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
+        List<Customer> customers = customerRepository.findAllByDeletedFalse();
         return customerMapper.mapToListDTO(customers);
     }
     @Transactional(readOnly = true)
@@ -355,5 +355,15 @@ public class CustomerService extends BaseService<Customer>{
         // Persist and return DTO
         Customer saved = customerRepository.save(customer);
         return customerMapper.mapToDTO(saved);
+    }
+
+    /**
+     * Returns all orders associated with the customer (order history).
+     */
+    public List<OrderDTO> getAllOrders(Customer customer) {
+        if (customer.getOrderHistory() == null) {
+            return new ArrayList<>();
+        }
+        return orderMapper.mapToListDTO(customer.getOrderHistory());
     }
 }

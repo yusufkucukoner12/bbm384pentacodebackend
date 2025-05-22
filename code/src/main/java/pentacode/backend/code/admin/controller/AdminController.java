@@ -22,6 +22,7 @@ import pentacode.backend.code.customer.dto.CustomerDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.auth.service.AuthenticationService;
 import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
+import pentacode.backend.code.customer.mapper.CustomerMapper;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -32,6 +33,7 @@ public class AdminController {
     private final CustomerService customerService;
     private final AdminService adminService;
     private final AuthenticationService authenticationService;
+    private final CustomerMapper customerMapper;
 
     
     public AdminController(OrderService orderService,
@@ -39,13 +41,15 @@ public class AdminController {
                            RestaurantService restaurantService,
                            CustomerService customerService,
                            AdminService adminService,
-                           AuthenticationService authenticationService) {
+                           AuthenticationService authenticationService,
+                           CustomerMapper customerMapper) {
         this.adminService = adminService;
         this.orderService = orderService;
         this.courierService = courierService;
         this.restaurantService = restaurantService;
         this.customerService = customerService;
         this.authenticationService = authenticationService;
+        this.customerMapper = customerMapper;
     }
     
     @PostMapping("/orders/{orderId}/assign-courier/{courierId}")
@@ -105,8 +109,12 @@ public class AdminController {
     }
     @PutMapping("/ban/{userId}")
     public ResponseEntity<Object> banUser(@PathVariable Long userId) {
-        Optional<User> user = adminService.banUser(userId);
-        return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
+        try {
+            Optional<User> user = adminService.banUser(userId);
+            return ResponseHandler.generatePkResponse("User banned successfully", HttpStatus.OK, user);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
+        }
     }
     @PutMapping("/unban/{userId}")
     public ResponseEntity<Object> unbanUser(@PathVariable Long userId) {
@@ -145,7 +153,11 @@ public class AdminController {
             updatedOrder
         );
     }
-
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
+        adminService.deleteUser(userId);
+        return ResponseHandler.generatePkResponse("User deleted successfully", HttpStatus.OK, null);
+    }
     @PutMapping("/customer/edit/{pk}")
     public ResponseEntity<Object> updateCustomerProfile(@PathVariable Long pk, @RequestBody CustomerDTO dto) {
         CustomerDTO updatedCustomer = adminService.updateCustomerProfile(pk, dto);
@@ -171,5 +183,26 @@ public class AdminController {
             return ResponseHandler.generatePkResponse("Failed to fetch courier profile", HttpStatus.BAD_REQUEST, null);
         }
         return ResponseHandler.generatePkResponse("Courier profile fetched successfully", HttpStatus.OK, courier);
+    }
+
+    @GetMapping("/customer/{customerPk}/orders")
+    public ResponseEntity<Object> getAllOrdersByCustomerPk(@PathVariable Long customerPk) {
+        try {
+            CustomerDTO customerDTO = customerService.getCustomerById(customerPk);
+            List<OrderDTO> orders = customerService.getAllOrders(customerMapper.mapToEntity(customerDTO));
+            return ResponseHandler.generatePkResponse("All orders retrieved successfully", HttpStatus.OK, orders);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving all orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
+    }
+
+    @GetMapping("/courier/{courierPk}/orders")
+    public ResponseEntity<Object> getAllOrdersByCourierPk(@PathVariable Long courierPk) {
+        try {
+            List<OrderDTO> orders = orderService.getOrderByCourierPk(courierPk, false, false);
+            return ResponseHandler.generatePkResponse("All orders retrieved successfully", HttpStatus.OK, orders);
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error retrieving all orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
     }
 }

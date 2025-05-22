@@ -85,8 +85,13 @@ public class RestaurantController {
     public ResponseEntity<Object> getAllRestaurants(
             @RequestParam(value = "search", required = false) String searchQuery,
             @RequestParam(value = "sort", required = false) String sortOption) {
-        List<RestaurantDTO> restaurantDTOs = restaurantService.getAllRestaurants(searchQuery, sortOption);
-        return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
+        try {
+            System.out.println("ASDGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgetAllRestaurants called");
+            List<RestaurantDTO> restaurantDTOs = restaurantService.getAllRestaurants(searchQuery, sortOption);
+            return ResponseHandler.generateListResponse("Success", HttpStatus.OK, restaurantDTOs, restaurantDTOs.size());
+        } catch (Exception e) {
+            return ResponseHandler.generatePkResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
+        }
     }
     
     @PostMapping("/orders/{orderId}/assign-courier/{courierId}")

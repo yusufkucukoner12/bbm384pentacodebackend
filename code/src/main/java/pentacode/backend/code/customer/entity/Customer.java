@@ -75,4 +75,6 @@ public class Customer extends BaseAudityModel{
     private List<Review> reviews = new ArrayList<>();
 
     private Double money = 0.0;
+    
+    private boolean deleted = false;
 }

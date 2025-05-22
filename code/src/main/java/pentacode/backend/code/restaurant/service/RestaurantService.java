@@ -111,6 +111,7 @@ public class RestaurantService extends BaseService<Restaurant> {
 
     public List<RestaurantDTO> getAllRestaurants(String searchQuery, String sortOption) {
         try {
+            System.out.println("ASDGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgetAllRestaurants called");
             Specification<Restaurant> spec = Specification.where(null);
 
             // Search by name or description
@@ -124,9 +125,9 @@ public class RestaurantService extends BaseService<Restaurant> {
 
             List<Restaurant> restaurants = restaurantRepository.findAll(spec);
 
-            // Filter open restaurants
-            restaurants = restaurants.stream()
-                .collect(Collectors.toList());
+            // // Filter open restaurants
+            // restaurants = restaurants.stream()
+            //     .collect(Collectors.toList());
 
             // Sort in Java
             restaurants.sort((a, b) -> {
@@ -147,9 +148,9 @@ public class RestaurantService extends BaseService<Restaurant> {
             );
             
             // Filter open restaurants
-            restaurants = restaurants.stream()
-                .filter(this::isRestaurantOpen)
-                .collect(Collectors.toList());
+            // restaurants = restaurants.stream()
+            //     .filter(this::isRestaurantOpen)
+            //     .collect(Collectors.toList());
                 
             return restaurantMapper.mapToListDTO(restaurants);
         }
@@ -209,7 +210,7 @@ public class RestaurantService extends BaseService<Restaurant> {
     }
 
     public List<RestaurantDTO> listAllRestaurants() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findAllByDeletedFalse();
         return restaurantMapper.mapToListDTO(restaurants);
     }
 }
