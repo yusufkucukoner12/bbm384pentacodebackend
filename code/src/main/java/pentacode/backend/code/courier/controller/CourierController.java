@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import pentacode.backend.code.auth.entity.User;
+import pentacode.backend.code.common.dto.ReviewDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.courier.dto.CourierDTO;
 import pentacode.backend.code.courier.service.CourierService;
@@ -68,4 +69,82 @@ public class CourierController {
                                                  HttpStatus.OK,
                                                  updatedCourier);
     }
+
+    @PostMapping("/rate")
+    public ResponseEntity<Object> rateCourier(
+            @AuthenticationPrincipal User user,
+            @RequestParam("orderPk") Long orderPk,
+            @RequestParam("rating") Integer rating,
+            @RequestBody ReviewDTO reviewDTO) {
+        // try {
+            System.out.println("ASDKASJASASJDASJASJDJASDJASDJASDJAS");
+            CourierDTO updatedCourier = courierService.rateCourier(orderPk, rating, reviewDTO);
+            return ResponseHandler.generatePkResponse("Courier rated successfully",
+                                                     HttpStatus.OK,
+                                                     updatedCourier);
+        // } catch (Exception e) {
+        //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        //                          .body(e.getMessage());
+        // }
+    }
+
+    @GetMapping("/check-review")
+    public ResponseEntity<Object> checkCourierReview(
+            @AuthenticationPrincipal User user,
+            @RequestParam("orderPk") Long orderPk,
+            @RequestParam("courierPk") Long courierPk) {
+        try {
+            ReviewDTO reviewDTO = courierService.checkCourierReview(orderPk, courierPk);
+            return ResponseHandler.generatePkResponse("Review fetched successfully",
+                                                     HttpStatus.OK,
+                                                     reviewDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete-review")
+    public ResponseEntity<Object> deleteCourierReview(
+            @AuthenticationPrincipal User user,
+            @RequestParam("reviewPk") Long reviewPk) {
+        try {
+            courierService.deleteCourierReview(reviewPk);
+            return ResponseEntity.ok("Review deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update-review")
+    public ResponseEntity<Object> updateCourierReview(
+            @AuthenticationPrincipal User user,
+            @RequestParam("reviewPk") Long reviewPk,
+            @RequestBody ReviewDTO reviewDTO) {
+        try {
+            ReviewDTO updatedReview = courierService.updateCourierReview(reviewPk, reviewDTO);
+            return ResponseHandler.generatePkResponse("Review updated successfully",
+                                                     HttpStatus.OK,
+                                                     updatedReview);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update-status")
+    public ResponseEntity<Object> updateCourierStatus(
+            @AuthenticationPrincipal User user) {
+        try {
+            CourierDTO courierDTO = courierService.updateStatus(user.getCourier());
+            return ResponseHandler.generatePkResponse("Courier status updated successfully",
+                                                     HttpStatus.OK,
+                                                     courierDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
 }

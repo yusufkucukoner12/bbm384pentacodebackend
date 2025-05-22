@@ -123,6 +123,7 @@ public class CustomerService extends BaseService<Customer>{
 
         if (order.getTotalPrice() == 0) {
             order.setRestaurant(null);
+            order.setName(null);
         }
 
         if (!itemFound) {
@@ -159,8 +160,10 @@ public class CustomerService extends BaseService<Customer>{
             throw new IllegalArgumentException("Order is empty.");
         }
         order.setStatus(OrderStatusEnum.PLACED);
+        order.setTotalPrice(order.getTotalPrice() + order.getRestaurant().getDeliveryFee());
         customer.setMoney(customer.getMoney() - (order.getTotalPrice() + order.getRestaurant().getDeliveryFee()));
         customer.addOrderToHistory(order);
+        order.setName("Order for" + order.getRestaurant().getName());
         System.out.println("Order items: " + order.getOrderItems());
         orderRepository.save(order);
         Order order1 = new Order();
@@ -170,7 +173,13 @@ public class CustomerService extends BaseService<Customer>{
         customerRepository.save(customer);
     }
 
-    public List<OrderDTO> getActiveOrders(Customer customer, boolean old) {
+    public List<OrderDTO> getActiveOrders(Customer customer, boolean old, boolean failed) {
+        if(failed){
+            List<Order> orders = customer.getOrderHistory().stream()
+                    .filter(order -> order.getStatus() == OrderStatusEnum.CANCELLED || order.getStatus() == OrderStatusEnum.REJECTED)
+                    .toList();
+            return orderMapper.mapToListDTO(orders);
+        }
         if (old) {
             List<Order> orders = customer.getOrderHistory().stream()
                     .filter(order -> order.getStatus() == OrderStatusEnum.DELIVERED)
@@ -179,7 +188,8 @@ public class CustomerService extends BaseService<Customer>{
         }
         else{
             List<Order> orders = customer.getOrderHistory().stream()
-                    .filter(order -> order.getStatus() == OrderStatusEnum.PLACED)
+                    .filter(order -> order.getStatus() != OrderStatusEnum.DELIVERED && order.getStatus() != OrderStatusEnum.CANCELLED && order.getStatus() != OrderStatusEnum.REJECTED && 
+                            order.getStatus() != OrderStatusEnum.AT_CART)
                     .toList();
             return orderMapper.mapToListDTO(orders);
         }

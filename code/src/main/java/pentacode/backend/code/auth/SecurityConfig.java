@@ -69,7 +69,8 @@ public class SecurityConfig {
                                 "/api/auth/admin-login",
                                 "/api/auth/validate-token",
                                 "/images/**",
-                                "/api/order/rate-order/**"
+                                "/api/order/rate-order/**",
+                                "/api/auth/reset-password"
 
                         ).permitAll()
                         // Allow OPTIONS for all endpoints without authentication
@@ -90,11 +91,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/customer/update-order/*").hasRole("CUSTOMER")
                         .requestMatchers("/api/customer/get-order").hasRole("CUSTOMER")
                         .requestMatchers("/api/order/courier/orders").hasRole("COURIER")
-                        .requestMatchers("/api/couriers/**").hasRole("COURIER")
+                        .requestMatchers("/api/couriers/**").hasAnyRole("COURIER", "CUSTOMER", "ADMIN")
                         .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/order/re-order/*").hasRole("CUSTOMER")
                         .requestMatchers("/api/auth/**").hasAnyRole("CUSTOMER", "ADMIN", "RESTAURANT", "COURIER")
-                           .requestMatchers("/api/order/**").hasRole("ADMIN")
+                        .requestMatchers("/api/order/**").hasAnyRole("ADMIN", "RESTAURANT", "COURIER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

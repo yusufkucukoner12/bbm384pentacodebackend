@@ -118,15 +118,23 @@ public class OrderController {
     }
 
     @GetMapping("/get-all-reviews")
-    public ResponseEntity<Object> getAllReviews() {
+    public ResponseEntity<Object> getAllReviews(@RequestParam("courier") String courier) {
         try {
-            List<ReviewDTO> reviews = orderService.getAllReviews();
+            List<ReviewDTO> reviews = orderService.getAllReviews(courier);
             return ResponseHandler.generateListResponse("Success", HttpStatus.OK, reviews, reviews.size());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
 
-
+    @GetMapping("/get-reviews")
+    public ResponseEntity<Object> getReviews(@AuthenticationPrincipal User user) {
+        try {
+            List<ReviewDTO> reviews = orderService.getReviews(user);
+            return ResponseHandler.generateListResponse("Success", HttpStatus.OK, reviews, reviews.size());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
 }
 

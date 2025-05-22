@@ -20,6 +20,7 @@ import pentacode.backend.code.auth.CreateUserRequest;
 import pentacode.backend.code.auth.CreateUserResponse;
 import pentacode.backend.code.auth.LoginRequest;
 import pentacode.backend.code.auth.LoginResponse;
+import pentacode.backend.code.auth.ResetPasswordRequest;
 import pentacode.backend.code.auth.entity.Role;
 import pentacode.backend.code.auth.entity.Token;
 import pentacode.backend.code.auth.entity.User;
@@ -216,5 +217,19 @@ public class AuthenticationService implements UserDetailsService{
     public Boolean getUserBanStatus(Long UserId){
         User user = userRepository.findById(UserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return user.isBanned();
+    }
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if(request.getNewPassword().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long");
+        }
+        else if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+        else if(request.getNewPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("New password cannot be the same as the old password");
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }

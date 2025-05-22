@@ -48,4 +48,7 @@ public class Courier extends BaseAudityModel {
     private String profilePictureUrl;
     
     private boolean deleted = false;
+
+    private Double rating = 0.0;
+    private Integer ratingCount = 0;
 }

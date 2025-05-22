@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Null;
+import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.CreateOrderRequestDTO;
 import pentacode.backend.code.common.dto.OrderDTO;
 import pentacode.backend.code.common.dto.OrderItemRequestDTO;
@@ -188,7 +189,7 @@ public class OrderService extends BaseService<Order> {
             return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndStatus(courierPk, OrderStatusEnum.IN_TRANSIT));
         }
         else{
-            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndCourierAssignmentAccepted(courierPk, false));
+            return orderMapper.mapToListDTO(orderRepository.findByCourierPkAndStatus(courierPk, OrderStatusEnum.ASSIGNED));
         }
     }
     @Transactional
@@ -359,9 +360,6 @@ public class OrderService extends BaseService<Order> {
         Long reviewId = reviewDTO.getPk();
         Review review = reviewRepository.findById(reviewId).orElse(null);
 
-        System.out.println("REVIEW ID: " + reviewId);
-        System.out.println("REVIEW: " + review);
-
         if (review == null) {
             return null;
         }
@@ -375,29 +373,43 @@ public class OrderService extends BaseService<Order> {
         order.setRating(reviewDTO.getRating());        
 
         Restaurant restaurant = order.getRestaurant();
-        System.out.println("rest" + restaurant.getNumberOfRatings());
-        restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() - 1);
-        if (restaurant.getNumberOfRatings() == 0) {
-            System.out.println("Restaurant number of ratings is 0");
-            restaurant.setRating((double)reviewDTO.getRating());
-            restaurant.setNumberOfRatings(1);
-        } else {
-            restaurant.setRating((restaurant.getRating() * (double)restaurant.getNumberOfRatings() -((double)oldRating)) / (double)restaurant.getNumberOfRatings());
-            restaurant.setNumberOfRatings(restaurant.getNumberOfRatings() + 1);
-            restaurant.setRating((restaurant.getRating() * (double)restaurant.getNumberOfRatings() + (double)reviewDTO.getRating()) / (double)restaurant.getNumberOfRatings());
-        }
+
+        restaurant.setRating((restaurant.getRating() * restaurant.getNumberOfRatings() - oldRating + reviewDTO.getRating()) / restaurant.getNumberOfRatings());
+        
         restaurantRepository.save(restaurant);
 
         return orderMapper.mapToDTO(order);
     }
 
+<<<<<<< HEAD
     /**
      * Returns all reviews with customer, restaurant, and order details populated in ReviewDTO.
      */
     public List<ReviewDTO> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         return reviewMapper.mapToListDTO(reviews);
+=======
+    public List<ReviewDTO> getAllReviews(String courier) {
+        System.out.println("COURIER: " + courier);
+        if(courier.equals("null")) {
+            return reviewMapper.mapToListDTO(reviewRepository.findAll());
+        }
+        if(courier.equals("true")) {
+            return reviewMapper.mapToListDTO(reviewRepository.findByCourierIdNotNull());
+        }
+        else {
+            return reviewMapper.mapToListDTO(reviewRepository.findByRestaurantIdNotNull());
+        }
+>>>>>>> dda358bb99b154622992d61c71ef1b5c6129c942
     }
 
-
+    public List<ReviewDTO> getReviews(User user) {
+        if (user.getRestaurant() != null) {
+            return reviewMapper.mapToListDTO(reviewRepository.findByRestaurantId(user.getRestaurant().getPk()));
+        } else if (user.getCourier() != null) {
+            return reviewMapper.mapToListDTO(reviewRepository.findByCourierId(user.getCourier().getPk()));
+        } else {
+            throw new RuntimeException("User is not a restaurant or courier");
+        }
+    }
 }

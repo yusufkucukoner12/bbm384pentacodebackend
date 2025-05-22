@@ -1,6 +1,5 @@
 package pentacode.backend.code.auth;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -104,7 +103,7 @@ public class AuthController {
     @GetMapping("/get-tickets")
     public ResponseEntity<Object> getTickets(@AuthenticationPrincipal User user, @RequestParam(required = false) String status) {
         try {
-            List<TicketDTO> tickets = ticketService.getAllTickets(user, status);
+            List<TicketDTO> tickets = ticketService.getAllTickets2(user, status);
             return ResponseHandler.generateListResponse("Success", HttpStatus.OK, tickets, tickets.size());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -140,5 +139,33 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        try {
+            authenticationService.resetPassword(request);
+            return ResponseEntity.ok(new ResetPasswordResponse("Password reset successfully."));
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResetPasswordResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResetPasswordResponse("Failed to reset password due to an internal error."));
+        }
+    }
+    private static class ResetPasswordResponse {
+        private String message;
+
+        public ResetPasswordResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
 }

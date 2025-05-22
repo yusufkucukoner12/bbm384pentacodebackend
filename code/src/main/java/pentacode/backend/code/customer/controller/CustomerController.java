@@ -96,16 +96,17 @@ public class CustomerController {
     }
 
     @GetMapping("/get-active-orders")
-    public ResponseEntity<Object> getActiveOrders(@AuthenticationPrincipal User user, @RequestParam boolean old) {
+    public ResponseEntity<Object> getActiveOrders(@AuthenticationPrincipal User user, @RequestParam(required=false) boolean old, @RequestParam(required = false) boolean failed) {
         try {
             Customer customer = user.getCustomer();
-            List<OrderDTO> orders = customerService.getActiveOrders(customer, old);
+            List<OrderDTO> orders = customerService.getActiveOrders(customer, old, failed);
             return ResponseHandler.generatePkResponse("Active orders retrieved successfully", HttpStatus.OK, orders);
         }   
         catch (Exception e) {
             return ResponseHandler.generatePkResponse("Error retrieving active orders", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }        
     }
+
     @GetMapping("/profile")
     public ResponseEntity<Object> getCustomerProfile(@AuthenticationPrincipal User user) {
         try {
