@@ -127,7 +127,6 @@ public class AdminController {
             return ResponseHandler.generatePkResponse(response.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
-<<<<<<< HEAD
     @PutMapping("/orders/{orderId}/status")
     public ResponseEntity<Object> updateOrderStatus(
             @PathVariable("orderId") Long orderId,
@@ -145,7 +144,6 @@ public class AdminController {
             HttpStatus.OK,
             updatedOrder
         );
-=======
 
     @PutMapping("/customer/edit/{pk}")
     public ResponseEntity<Object> updateCustomerProfile(@PathVariable Long pk, @RequestBody CustomerDTO dto) {
@@ -172,6 +170,5 @@ public class AdminController {
             return ResponseHandler.generatePkResponse("Failed to fetch courier profile", HttpStatus.BAD_REQUEST, null);
         }
         return ResponseHandler.generatePkResponse("Courier profile fetched successfully", HttpStatus.OK, courier);
->>>>>>> 43303daa9e1b4e2d1e0cf7c9d83cac0d0fcf6aca
     }
 }
