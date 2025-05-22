@@ -74,5 +74,5 @@ public class Customer extends BaseAudityModel{
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
-    private Double money;
+    private Double money = 0.0;
 }
