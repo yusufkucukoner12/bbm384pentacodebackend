@@ -1,5 +1,6 @@
 package pentacode.backend.code.common.dto;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -28,4 +29,6 @@ public class OrderDTO {
     public List<OrderItemDTO> orderItems;
     private boolean isRated;
     private Integer rating;
+    private Date createdAt;
+
 }
