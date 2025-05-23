@@ -1,5 +1,6 @@
 package pentacode.backend.code.restaurant.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import pentacode.backend.code.restaurant.dto.RestaurantDTO;
 import pentacode.backend.code.restaurant.mapper.RestaurantMapper;
 import pentacode.backend.code.restaurant.service.RestaurantService;
 import pentacode.backend.code.common.dto.UpdateOrderStatusRequestDTO;
+import pentacode.backend.code.restaurant.entity.Restaurant;
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -167,5 +169,23 @@ public class RestaurantController {
                 "Invalid category or restaurant", HttpStatus.BAD_REQUEST, null);
         }
         return ResponseHandler.generateListResponse("Success", HttpStatus.OK, menus, menus.size());
+    }
+
+    @GetMapping("/get-review-puan")
+    public ResponseEntity<Object> getRestaurantReviewPuan(@AuthenticationPrincipal User user) {
+        try
+        {
+            Restaurant restaurant = user.getRestaurant();
+            Double reviewPuan = restaurant.getRating(); // Assuming getRating() returns a Double
+            Integer reviewCount = restaurant.getNumberOfRatings(); // Assuming getRatingCount() returns an Integer
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("rating", reviewPuan);
+            response.put("ratingCount", reviewCount);
+            
+            return ResponseHandler.generatePkResponse("Success", HttpStatus.OK, response);
+        }
+        catch (Exception e) {
+            return ResponseHandler.generatePkResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
     }
 }

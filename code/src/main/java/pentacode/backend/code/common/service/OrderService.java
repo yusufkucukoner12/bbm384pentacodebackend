@@ -357,9 +357,12 @@ public class OrderService extends BaseService<Order> {
         return orderMapper.mapToDTO(order);
     }
 
-    public OrderDTO updateReview(Long orderId, ReviewDTO reviewDTO, Customer customer) {
+    public OrderDTO updateReview(Long orderId, ReviewDTO reviewDTO) {
         Long reviewId = reviewDTO.getPk();
         Review review = reviewRepository.findById(reviewId).orElse(null);
+
+        System.out.println("REVIEW ID: " + reviewId);
+        
 
         if (review == null) {
             return null;

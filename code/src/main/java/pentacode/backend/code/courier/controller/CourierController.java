@@ -1,5 +1,6 @@
 package pentacode.backend.code.courier.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import pentacode.backend.code.auth.entity.User;
 import pentacode.backend.code.common.dto.ReviewDTO;
 import pentacode.backend.code.common.utils.ResponseHandler;
 import pentacode.backend.code.courier.dto.CourierDTO;
+import pentacode.backend.code.courier.entity.Courier;
 import pentacode.backend.code.courier.service.CourierService;
 
 @RestController
@@ -76,16 +78,16 @@ public class CourierController {
             @RequestParam("orderPk") Long orderPk,
             @RequestParam("rating") Integer rating,
             @RequestBody ReviewDTO reviewDTO) {
-        // try {
+        try {
             System.out.println("ASDKASJASASJDASJASJDJASDJASDJASDJAS");
             CourierDTO updatedCourier = courierService.rateCourier(orderPk, rating, reviewDTO, user.getCustomer());
             return ResponseHandler.generatePkResponse("Courier rated successfully",
                                                      HttpStatus.OK,
                                                      updatedCourier);
-        // } catch (Exception e) {
-        //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        //                          .body(e.getMessage());
-        // }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
     }
 
     @GetMapping("/check-review")
@@ -141,6 +143,26 @@ public class CourierController {
             return ResponseHandler.generatePkResponse("Courier status updated successfully",
                                                      HttpStatus.OK,
                                                      courierDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-review-puan")
+    public ResponseEntity<Object> getCourierReviewPuan(
+            @AuthenticationPrincipal User user) {
+        try {
+            Courier courier = user.getCourier();
+            Double rating = courier.getRating();
+            Integer ratingCount = courier.getRatingCount();
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("rating", rating);
+            response.put("ratingCount", ratingCount);
+            return ResponseHandler.generatePkResponse("Courier review rating fetched successfully",
+                                                     HttpStatus.OK,
+                                                     response);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(e.getMessage());

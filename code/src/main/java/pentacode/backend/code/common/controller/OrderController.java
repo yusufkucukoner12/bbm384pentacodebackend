@@ -110,7 +110,7 @@ public class OrderController {
     @PutMapping("/update-review/{pk}")
     public ResponseEntity<Object> updateReview(@AuthenticationPrincipal User user, @PathVariable Long pk, @RequestBody ReviewDTO reviewDTO) {
         try {
-            orderService.updateReview(pk, reviewDTO, user.getCustomer());
+            orderService.updateReview(pk, reviewDTO);
             return ResponseEntity.ok("Success");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");

@@ -156,6 +156,7 @@ public class CourierService extends BaseService<Courier> {
                 .reviewText(review.getReviewText())
                 .rating(review.getRating())
                 .pk(review.getPk())
+                .courier(courierMapper.mapToDTO(courier))
                 .build();
     }   
 
