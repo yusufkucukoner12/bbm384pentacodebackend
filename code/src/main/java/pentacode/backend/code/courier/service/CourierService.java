@@ -84,7 +84,7 @@ public class CourierService extends BaseService<Courier> {
     }
 
     // rate courier
-    public CourierDTO rateCourier(Long orderPk, Integer rating, ReviewDTO reviewDTO) {
+    public CourierDTO rateCourier(Long orderPk, Integer rating, ReviewDTO reviewDTO, Customer customer) {
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5");
         }
@@ -98,6 +98,8 @@ public class CourierService extends BaseService<Courier> {
                 .rating(rating)
                 .courier(courier)
                 .order2(order)
+                .customer(customer)
+                .restaurant(order.getRestaurant())
                 .build();
 
         reviewRepository.save(review);

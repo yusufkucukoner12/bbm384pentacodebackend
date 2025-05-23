@@ -78,7 +78,7 @@ public class CourierController {
             @RequestBody ReviewDTO reviewDTO) {
         // try {
             System.out.println("ASDKASJASASJDASJASJDJASDJASDJASDJAS");
-            CourierDTO updatedCourier = courierService.rateCourier(orderPk, rating, reviewDTO);
+            CourierDTO updatedCourier = courierService.rateCourier(orderPk, rating, reviewDTO, user.getCustomer());
             return ResponseHandler.generatePkResponse("Courier rated successfully",
                                                      HttpStatus.OK,
                                                      updatedCourier);

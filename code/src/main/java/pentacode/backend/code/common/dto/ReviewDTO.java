@@ -16,6 +16,7 @@ public class ReviewDTO {
     private Integer rating;
     private CustomerDTO customer;
     private OrderDTO order;
+    private OrderDTO order2;
     private RestaurantDTO restaurant;
     private CourierDTO courier;
 }

@@ -146,6 +146,7 @@ public class OrderService extends BaseService<Order> {
         
         if (status.equals("IN_TRANSIT")) {
             order.setCourierAssignmentAccepted(true);
+            order.getCourier().setAvailable(false);
             order.setStatus(OrderStatusEnum.IN_TRANSIT);
         } 
         else if (status.equals("DELIVERED")) {
